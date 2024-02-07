@@ -30,7 +30,6 @@ WeaponSlots = {
 
 Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, inventoryHolder, addType)
     if modItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "armorBag" then
-        BasicPrint("ENGAGING MOGGING OF ARMOR")
         local bagEntity = _GE(inventoryHolder)
         if bagEntity then
             local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
@@ -40,19 +39,18 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID then
                     if (ArmorSlots[equipmentSlot]) then
-                        BasicPrint("Armor Tmog for Slot : " .. tostring(equipmentSlot))
+                        BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
                         local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
                         if correspondingEquipment then
                             TransmogArmorUltimateVersion(GUID(item), (GUID(correspondingEquipment)), bagOwnerUUID)
-                        else
-                            SaveArmorSkinInfoOnCharacter(bagOwnerUUID, item, equipmentSlot)
                         end
+                        SaveArmorSkinInfoOnCharacter(bagOwnerUUID, item, equipmentSlot)
                     end
                 end
             end
         end
     elseif modItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
-        BasicPrint("ENGAGING MOGGING OF WEAPON")
+        BasicDebug("ENGAGING MOGGING OF WEAPON")
         local bagEntity = _GE(inventoryHolder)
         if bagEntity then
             local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
@@ -62,7 +60,7 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID then
                     if WeaponSlots[equipmentSlot] then
-                        BasicPrint("Weapon Tmog for Slot : " .. tostring(equipmentSlot))
+                        BasicDebug("Weapon Tmog for Slot : " .. tostring(equipmentSlot))
                         local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
                             tostring(WeaponSlots[equipmentSlot]))
                         if correspondingEquipment then
@@ -87,14 +85,15 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
             local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
             local itemEntity = _GE(item)
             if itemEntity and itemEntity.Equipable then
+                local modVars=GetModVariables()
+                modVars=modVars.Fallen_TmogInfos
                 local equipmentSlot = itemEntity.Equipable.Slot
-                if bagOwnerUUID and ArmorSlots[equipmentSlot] then
-                    BasicPrint("Removed Armor from bag for Slot : " .. tostring(equipmentSlot))
+                if bagOwnerUUID and ArmorSlots[equipmentSlot] and (modVars and modVars[bagOwnerUUID] and modVars[bagOwnerUUID][equipmentSlot] and GUID(item)==modVars[bagOwnerUUID][equipmentSlot].skin) then
+                    BasicDebug("Removed Armor from bag for Slot : " .. tostring(equipmentSlot))
                     local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
                     if correspondingEquipment and _GE(correspondingEquipment).Vars.Fallen_TmogArmorInfos and _GE(correspondingEquipment).Vars.Fallen_TmogArmorInfos.parentItem then
-                        BasicPrint("Restoring Equipped Piece's stats")
-                        --TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
-                        RestoreOldArmor(correspondingEquipment, item, bagOwnerUUID)
+                        BasicDebug("Restoring Equipped Piece's visuals")
+                        RestoreOldArmor(correspondingEquipment, item, bagOwnerUUID, true)  --TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                     end
                     RemoveArmorSkinInfoOnCharacter(bagOwnerUUID, item, equipmentSlot)
                 end
@@ -109,11 +108,11 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
             if itemEntity and itemEntity.Equipable then
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID and WeaponSlots[equipmentSlot] then
-                    BasicPrint("Removed Weapon from bag for Slot : " .. tostring(equipmentSlot))
+                    BasicDebug("Removed Weapon from bag for Slot : " .. tostring(equipmentSlot))
                     local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
                         tostring(WeaponSlots[equipmentSlot]))
                     if correspondingEquipment then
-                        BasicPrint("Restoring Equipped Piece's visuals")
+                        BasicDebug("Restoring Equipped Piece's visuals")
                         --TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                         RestoreOriginalStateForItem(_GE(correspondingEquipment))
                     end
@@ -124,24 +123,31 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
     end
 end)
 
---TODO FIX INFINITE LOOP
+--TODO FIX INFINITE EQUIP LOOP
 Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
     local itemEntity = _GE(item)
-    local equipmentSlot = tostring(itemEntity.Equipable.Slot)
-    if ArmorSlots[equipmentSlot] then
-        local modVars = GetModVariables()
-        if modVars and modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)] and modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot] then
-            local skinToApply = modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot].skin
-            --local correspondingEquipment = Osi.GetEquippedItem(character, tostring(equipmentSlot))
-            TransmogArmorUltimateVersion(GUID(item), skinToApply, character)
-        end
-        --Weapon shit
-    elseif WeaponSlots[equipmentSlot] and PersistentVars.Tmoggeds and PersistentVars.Tmoggeds[GUID(character)] then
-        if PersistentVars.Tmoggeds[GUID(character)][equipmentSlot] then
-            BasicPrint("EQUIPPED ARMOR IN SLOT : " .. equipmentSlot)
-            BasicPrint("Pvars for character & slot : ")
-            BasicPrint(PersistentVars.Tmoggeds[GUID(character)][equipmentSlot])
-            ApplyMoggedToItemFromPvar(itemEntity, GUID(character), equipmentSlot)
+    if itemEntity then
+        local equipmentSlot = tostring(itemEntity.Equipable.Slot)
+        if ArmorSlots[equipmentSlot] then
+            local modVars = GetModVariables()
+            if modVars and modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)] and modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot] then
+                BasicDebug(itemEntity.Vars.Fallen_TmogArmorInfos)
+                if not itemEntity.Vars.Fallen_TmogArmorInfos then itemEntity.Vars.Fallen_TmogArmorInfos = {} end
+                if not itemEntity.Vars.Fallen_TmogArmorInfos.parentItem then
+                    local skinToApply = modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot].skin
+                    BasicDebug("skinToApply : " .. skinToApply)
+                    --local correspondingEquipment = Osi.GetEquippedItem(character, tostring(equipmentSlot))
+                    TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
+                end
+            end
+            --Weapon shit
+        elseif WeaponSlots[equipmentSlot] and PersistentVars.Tmoggeds and PersistentVars.Tmoggeds[GUID(character)] then
+            if PersistentVars.Tmoggeds[GUID(character)][equipmentSlot] then
+                BasicDebug("EQUIPPED ARMOR IN SLOT : " .. equipmentSlot)
+                BasicDebug("Pvars for character & slot : ")
+                BasicDebug(PersistentVars.Tmoggeds[GUID(character)][equipmentSlot])
+                ApplyMoggedToItemFromPvar(itemEntity, GUID(character), equipmentSlot)
+            end
         end
     end
 end)
@@ -151,7 +157,8 @@ Ext.Osiris.RegisterListener("Unequipped", 2, "before", function(item, character)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
         RestoreOriginalStateForItem(itemEntity)
     elseif itemEntity.Vars.Fallen_TmogArmorInfos and itemEntity.Vars.Fallen_TmogArmorInfos.parentItem then
-        RestoreOldArmor(item, itemEntity.Vars.Fallen_TmogArmorInfos.skinItem, character)
+        BasicDebug("Uniequip restoring old armor")
+        RestoreOldArmor(item, itemEntity.Vars.Fallen_TmogArmorInfos.skinItem, character, false)
     end
 end)
 

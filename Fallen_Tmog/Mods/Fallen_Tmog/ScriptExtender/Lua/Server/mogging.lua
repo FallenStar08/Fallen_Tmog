@@ -49,14 +49,14 @@ end
 ---@param itemEntity ItemEntity
 local function saveOriginalWeaponInfos(itemEntity)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
-        BasicPrint("Already saved Original w infos")
+        BasicDebug("Already saved Original w infos")
         return
     end
     local dataToSave = { ["OriginalVisualId"] = itemEntity.GameObjectVisual.RootTemplateId }
     itemEntity.Vars.Fallen_OriginalWeaponInfos = dataToSave
     SyncUserVariables()
-    BasicPrint("Saved state for weapon " .. EntityToUuid(itemEntity))
-    BasicPrint(dataToSave)
+    BasicDebug("Saved state for weapon " .. EntityToUuid(itemEntity))
+    BasicDebug(dataToSave)
 end
 
 
@@ -81,24 +81,25 @@ end
 ---@param character GUIDSTRING
 ---@param armor GUIDSTRING
 ---@param equipmentSlot EQUIPMENTSLOT
-function SaveArmorSkinInfoOnCharacter(character,armor,equipmentSlot)
-    local modVars=GetModVariables()
-    local data={
-        [GUID(character)]={
-            [equipmentSlot]={
+function SaveArmorSkinInfoOnCharacter(character, armor, equipmentSlot)
+    local modVars = GetModVariables()
+    local data = {
+        [GUID(character)] = {
+            [equipmentSlot] = {
 
             }
         }
     }
-    if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos=data end
-    modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot]={[GUID(armor)]=true}
+    if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos = data end
+    modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot] = { ["skin"] = GUID(armor) }
+    BasicDebug(modVars.Fallen_TmogInfos)
     SyncModVariables()
 end
 
-function RemoveArmorSkinInfoOnCharacter(character,armor,equipmentSlot)
-    local modVars=GetModVariables()
-    if modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot][GUID(armor)] then
-        modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot]=nil
+function RemoveArmorSkinInfoOnCharacter(character, armor, equipmentSlot)
+    local modVars = GetModVariables()
+    if modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)] and modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot] and modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot].skin then
+        modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot] = nil
         SyncModVariables()
     end
 end
@@ -107,16 +108,29 @@ end
 ---@param equippedItem GUIDSTRING
 ---@param skin GUIDSTRING
 ---@param bagOwnerUUID GUIDSTRING
-function RestoreOldArmor(equippedItem, skin, bagOwnerUUID)
+---@param fromSkinRemoval boolean
+function RestoreOldArmor(equippedItem, skin, bagOwnerUUID, fromSkinRemoval)
+    local skinEntity = _GE(skin)
     local equippedEntity = _GE(equippedItem)
-    if equippedEntity and equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem and equippedEntity.Vars.Fallen_TmogArmorInfos.skinItem then
-        local parentItem = equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem
-        Osi.RequestDelete(_GE(skin).Vars.Fallen_TmogArmorInfos.moggingItem)
-        Osi.Equip(bagOwnerUUID, parentItem)
-        _GE(equippedItem).Vars.Fallen_TmogArmorInfos.parentItem = nil
-        _GE(equippedItem).Vars.Fallen_TmogArmorInfos.skinItem = nil
-        SyncUserVariables()
+    if fromSkinRemoval then
+        if equippedEntity and equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem and equippedEntity.Vars.Fallen_TmogArmorInfos.skinItem then
+            local parentItem = equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem
+            Osi.ToInventory(parentItem, bagOwnerUUID)
+            equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem = nil
+            equippedEntity.Vars.Fallen_TmogArmorInfos.skinItem = nil
+            equippedEntity.Vars.Fallen_TmogArmorInfos = nil
+        end
+    else
+        if equippedEntity and equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem and equippedEntity.Vars.Fallen_TmogArmorInfos.skinItem then
+            local parentItem = equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem
+            Osi.RequestDelete(skinEntity.Vars.Fallen_TmogArmorInfos.moggingItem)
+            Osi.ToInventory(parentItem, bagOwnerUUID)
+            equippedEntity.Vars.Fallen_TmogArmorInfos.parentItem = nil
+            equippedEntity.Vars.Fallen_TmogArmorInfos.skinItem = nil
+            equippedEntity.Vars.Fallen_TmogArmorInfos = nil
+        end
     end
+    SyncUserVariables()
 end
 
 ---Create a new armor using skin from skin and data from equippedPiece on char
@@ -133,8 +147,8 @@ function TransmogArmorUltimateVersion(skin, equippedPiece, character)
         if moggingEntity then
             DelayedCall(333, function()
                 CopyEntityData(moggingEntity, equippedPieceEntity, TransmogCopyList)
-                CopyStatuses(moggingEntity, equippedPieceEntity)
-                BasicPrint(createdMogging)
+                CopyStatuses(moggingEntity, equippedPieceEntity, 200)
+                BasicDebug("Tmog, Created mog uuid : " .. createdMogging)
                 Osi.Equip(character, createdMogging, 1, 0, 0)
                 moggingEntity.Vars.Fallen_TmogArmorInfos = {
                     ["parentItem"] = GUID(equippedPiece),
@@ -154,9 +168,9 @@ end
 function RestoreOriginalStateForItem(itemEntity)
     if itemEntity.Vars.Fallen_OriginalArmorInfos then
         local uuid = EntityToUuid(itemEntity)
-        BasicPrint("Restoring item state for armor : " .. uuid)
+        BasicDebug("Restoring item state for armor : " .. uuid)
         local data = itemEntity.Vars.Fallen_OriginalArmorInfos
-        BasicPrint("Using the following data : " .. JSON.Stringify(data))
+        BasicDebug("Using the following data : " .. JSON.Stringify(data))
         if not data then return end
         itemEntity.Use.Boosts = {}
         itemEntity.Data.StatsId = data.StatsId
@@ -180,7 +194,7 @@ function RestoreOriginalStateForItem(itemEntity)
         --replicateArmorComponents(itemEntity)
     elseif itemEntity.Vars.Fallen_OriginalWeaponInfos then
         local uuid = EntityToUuid(itemEntity)
-        BasicPrint("Restoring item state for weapon : " .. uuid)
+        BasicDebug("Restoring item state for weapon : " .. uuid)
         itemEntity.GameObjectVisual.RootTemplateId = itemEntity.Vars.Fallen_OriginalWeaponInfos.OriginalVisualId
         replicateWeaponComponents(itemEntity)
     end
@@ -191,11 +205,11 @@ function RestoreMoggedItems()
     for characterUUID, characterEquipments in pairs(PersistentVars.Tmoggeds) do
         for slot, data in pairs(characterEquipments) do
             if ArmorSlots[slot] then
-                --BasicPrint(type(slot))
+                --BasicDebug(type(slot))
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, slot)
                 ApplyMoggedToItemFromPvar(_GE(correspondingEquipment), characterUUID, slot)
             elseif WeaponSlots[slot] then
-                --BasicPrint(type(slot))
+                --BasicDebug(type(slot))
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, WeaponSlots[slot])
                 ApplyMoggedToItemFromPvar(_GE(correspondingEquipment), characterUUID, slot)
             end
