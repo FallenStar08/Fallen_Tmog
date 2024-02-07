@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="328" lslib_meta="v1,bswap_guids" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="FixedString" value="ee9d149e-4558-4583-86f2-bd3dc01a034a" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_ArmorSlotBag"/>
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="ParentTemplateId" type="FixedString" value="2e40240b-77d3-400b-bd6a-caff66a85833" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_ArmorSlotBag"/>
+					<attribute id="StoryItem" type="bool" value="True" />
+					<attribute id="Icon" type="FixedString" value="Fallen_ICON_Tmog_ArmorBag" />
+					<attribute id="DisplayName" type="TranslatedString" handle="h3b2ce0b6g76afg4ec6g9753g45ce1eb93bf0" version="1" />
+					<attribute id="Description" type="TranslatedString" handle="h35101ed5gf449g48f2g9029g93444acb37de" version="1" />
+					<attribute id="TechnicalDescription" type="TranslatedString" handle="h299715beg62f4g4dfbgbdbcgec5ea5a7df61" version="1" />
+				</node>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="FixedString" value="7c515100-55f6-4dde-b46a-78099db32ace" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_WeaponBagSlot"/>
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="ParentTemplateId" type="FixedString" value="2e40240b-77d3-400b-bd6a-caff66a85833" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_WeaponBagSlot"/>
+					<attribute id="StoryItem" type="bool" value="True"/> 
+					<attribute id="Icon" type="FixedString" value="Fallen_ICON_Tmog_WeaponBag"/>
+					<attribute id="DisplayName" type="TranslatedString" handle="he209db56gf0a1g48d6gafeag2cb2426a666a" version="1" />
+					<attribute id="Description" type="TranslatedString" handle="h89ad7720g52bdg41a9ga3d6ge62dcbe9d539" version="1" />
+					<attribute id="TechnicalDescription" type="TranslatedString" handle="hd4d53975gd560g4a36g9d74g0a10b563395a" version="1" />
+				</node>
+			</children>
+		</node>
+	</region>
+</save>
