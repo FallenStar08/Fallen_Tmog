@@ -123,7 +123,6 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
     end
 end)
 
---TODO USE TEMPLATES INSTEAD!!!!
 Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
     local itemEntity = _GE(item)
     if itemEntity then
@@ -142,7 +141,7 @@ Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
                 local skinToApply = modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot]
                 BasicPrint(string.format("Equipped() Applying the skin of : %s on item : %s from modVars!",
                     GetTranslatedName(skinToApply), GetTranslatedName(item)))
-                TransmogWeapon(item, skinToApply, character)
+                TransmogWeapon(item, skinToApply, character,true)
             end
         end
     end
@@ -164,12 +163,8 @@ end)
 Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(level, iseditor)
     RestoreMoggedWeapons()
     RestoreMoggedArmors()
-    for _, player in pairs(GetSquadies()) do
-        for item, name in pairs(modItemRoots) do
-            if not HasItemTemplate(player, item) then
-                Osi.TemplateAddTo(item, player, 1, 1)
-            end
-        end
+    for item, name in pairs(modItemRoots) do
+        GiveItemToEachPartyMember(item)
     end
 end)
 

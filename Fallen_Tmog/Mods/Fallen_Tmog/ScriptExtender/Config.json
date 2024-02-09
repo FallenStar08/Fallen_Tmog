@@ -1,5 +1,5 @@
 {
-    "RequiredVersion": 12,
+    "RequiredVersion": 14,
     "ModTable": "Fallen_Tmog",
     "FeatureFlags": ["Lua"]
 }
