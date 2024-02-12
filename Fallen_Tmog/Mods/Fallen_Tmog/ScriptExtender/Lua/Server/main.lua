@@ -125,23 +125,22 @@ end)
 
 Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
     local itemEntity = _GE(item)
-    if itemEntity then
-        local modVars = GetModVariables()
-        local equipmentSlot = tostring(itemEntity.Equipable.Slot)
-        if ArmorSlots[equipmentSlot] then
-            if modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)] and modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot] then
-                --BasicPrint(itemEntity.Vars.Fallen_TmogArmorInfos)
-                local skinToApply = modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot]
-                BasicPrint(string.format("Equipped() Applying the skin of : %s on item : %s from modVars!",
-                    GetTranslatedName(skinToApply), GetTranslatedName(item)))
+    if not itemEntity then return end
+
+    local modVars = GetModVariables()
+    local equipmentSlot = tostring(itemEntity.Equipable.Slot)
+    local tmogInfos = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)]
+
+    if tmogInfos and tmogInfos[equipmentSlot] then
+        local skinToApply = tmogInfos[equipmentSlot]
+        local slotType = ArmorSlots[equipmentSlot] and "Armor" or (WeaponSlots[equipmentSlot] and "Weapon")
+        if slotType then
+            BasicPrint(string.format("Equipped() Applying the skin of : %s on item : %s from modVars!",
+                GetTranslatedName(skinToApply), GetTranslatedName(item)))
+            if slotType == "Armor" then
                 TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
-            end
-        elseif WeaponSlots[equipmentSlot] then
-            if modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)] and modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot] then
-                local skinToApply = modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot]
-                BasicPrint(string.format("Equipped() Applying the skin of : %s on item : %s from modVars!",
-                    GetTranslatedName(skinToApply), GetTranslatedName(item)))
-                TransmogWeapon(item, skinToApply, character,true)
+            else
+                TransmogWeapon(item, skinToApply, character, true)
             end
         end
     end
@@ -168,5 +167,3 @@ Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(level, 
     end
 end)
 
-Ext.Events.ResetCompleted:Subscribe(function()
-end)

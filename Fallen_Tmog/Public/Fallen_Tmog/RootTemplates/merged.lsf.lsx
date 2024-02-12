@@ -11,10 +11,41 @@
 					<attribute id="ParentTemplateId" type="FixedString" value="2e40240b-77d3-400b-bd6a-caff66a85833" />
 					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_ArmorSlotBag"/>
 					<attribute id="StoryItem" type="bool" value="True" />
+					<attribute id="VisualTemplate" type="FixedString" value="3d37919a-d049-fa8a-c124-c05749f72abf"/>
 					<attribute id="Icon" type="FixedString" value="Fallen_ICON_Tmog_ArmorBag" />
 					<attribute id="DisplayName" type="TranslatedString" handle="h3b2ce0b6g76afg4ec6g9753g45ce1eb93bf0" version="1" />
 					<attribute id="Description" type="TranslatedString" handle="h35101ed5gf449g48f2g9029g93444acb37de" version="1" />
 					<attribute id="TechnicalDescription" type="TranslatedString" handle="h299715beg62f4g4dfbgbdbcgec5ea5a7df61" version="1" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Height" type="float" value="2.40635" />
+									<attribute id="Max" type="fvec3" value="0.4150899 2.40635 0.2500001" />
+									<attribute id="Min" type="fvec3" value="-0.415088 0 -0.2500001" />
+									<attribute id="Radius" type="float" value="0.3862339" />
+									<attribute id="Shape" type="uint8" value="1" />
+									<attribute id="Type" type="uint8" value="0" />
+								</node>
+								<node id="Bound">
+									<attribute id="Height" type="float" value="2.40635" />
+									<attribute id="Max" type="fvec3" value="0.8301799 2.40635 0.5000002" />
+									<attribute id="Min" type="fvec3" value="-0.8301761 0 -0.5000002" />
+									<attribute id="Radius" type="float" value="0.7724677" />
+									<attribute id="Shape" type="uint8" value="1" />
+									<attribute id="Type" type="uint8" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Height" type="float" value="2.40635" />
+									<attribute id="Max" type="fvec3" value="0.8301799 2.40635 0.5000002" />
+									<attribute id="Min" type="fvec3" value="-0.8301761 0 -0.5000002" />
+									<attribute id="Radius" type="float" value="0.7724677" />
+									<attribute id="Shape" type="uint8" value="1" />
+									<attribute id="Type" type="uint8" value="2" />
+								</node>
+							</children>
+						</node>
+					</children>
 				</node>
 				<node id="GameObjects">
 					<attribute id="MapKey" type="FixedString" value="7c515100-55f6-4dde-b46a-78099db32ace" />

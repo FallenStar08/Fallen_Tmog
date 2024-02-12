@@ -1,12 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <contentList>
-	<content contentuid="h3b2ce0b6g76afg4ec6g9753g45ce1eb93bf0" version="1">Armor cosmetic slots</content>
-	<content contentuid="h299715beg62f4g4dfbgbdbcgec5ea5a7df61" version="1">Edit this shit</content>
-	<content contentuid="h35101ed5gf449g48f2g9029g93444acb37de" version="1">Put skins you want
-		inside</content>
-	<content contentuid="he209db56gf0a1g48d6gafeag2cb2426a666a" version="1">Weapon cosmetic slots</content>
-	<content contentuid="h89ad7720g52bdg41a9ga3d6ge62dcbe9d539" version="1">Edit this shit</content>
-	<content contentuid="hd4d53975gd560g4a36g9d74g0a10b563395a" version="1">Put weapon skins you
-		want inside</content>
-
+	<content contentuid="h3b2ce0b6g76afg4ec6g9753g45ce1eb93bf0" version="1">Cosmetic slot - Armors</content>
+	<content contentuid="h299715beg62f4g4dfbgbdbcgec5ea5a7df61" version="1">Put the armor skins you want to wear inside</content>
+	<content contentuid="h35101ed5gf449g48f2g9029g93444acb37de" version="1">I'm so pretty.</content>
+	<content contentuid="he209db56gf0a1g48d6gafeag2cb2426a666a" version="1">Cosmetic Slot - Weapons</content>
+	<content contentuid="hd4d53975gd560g4a36g9d74g0a10b563395a" version="1">Put the weapon skins you want inside</content>
+	<content contentuid="h89ad7720g52bdg41a9ga3d6ge62dcbe9d539" version="1">Killing with style.</content>
 </contentList>

@@ -8,14 +8,14 @@
                 <node id="ModuleInfo">
                     <attribute id="Author" type="LSWString" value="FallenStar"/>
                     <attribute id="CharacterCreationLevelName" type="FixedString" value=""/>
-                    <attribute id="Description" type="LSWString" value="Another Transmog mod"/>
+                    <attribute id="Description" type="LSWString" value="Transmog but better, don't tell Eralyne"/>
                     <attribute id="Folder" type="LSWString" value="Fallen_Tmog"/> 
                     <attribute id="GMTemplate" type="FixedString" value=""/>
                     <attribute id="LobbyLevelName" type="FixedString" value=""/>
                     <attribute id="MD5" type="LSString" value=""/>
                     <attribute id="MainMenuBackgroundVideo" type="FixedString" value=""/>
                     <attribute id="MenuLevelName" type="FixedString" value=""/>
-                    <attribute id="Name" type="FixedString" value="Convenient Transmog"/>
+                    <attribute id="Name" type="FixedString" value="Cosmetic Slots"/>
                     <attribute id="NumPlayers" type="uint8" value="4"/>
                     <attribute id="PhotoBooth" type="FixedString" value=""/>
                     <attribute id="StartupLevelName" type="FixedString" value=""/>

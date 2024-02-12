@@ -107,9 +107,9 @@ function RestoreMoggedWeapons()
         for slot, skin in pairs(characterEquipments) do
             if WeaponSlots[slot] then
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, WeaponSlots[slot])
-                BasicPrint(string.format("Restoring appearance for weapon %s for slot %s Osislot %s",
-                    correspondingEquipment or "", slot, WeaponSlots[slot]))
                 if correspondingEquipment then
+                    BasicPrint(string.format("Restoring appearance for weapon : %s for slot : %s Osislot : %s",
+                    correspondingEquipment or "", slot, WeaponSlots[slot]))
                     TransmogWeapon(correspondingEquipment, skin, characterUUID,true)
                 end
             end
@@ -126,6 +126,8 @@ function RestoreMoggedArmors()
             for slot, skin in pairs(characterEquipments) do
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, tostring(slot))
                 if correspondingEquipment then
+                    BasicPrint(string.format("Restoring appearance for armor piece : %s for slot : %s",
+                    correspondingEquipment or "", slot))
                     TransmogArmorUltimateVersion(skin, correspondingEquipment, characterUUID)
                     RefreshCharacterArmorVisuals(_GE(characterUUID))
                 end
