@@ -170,6 +170,7 @@ Ext.Osiris.RegisterListener("Unequipped", 2, "before", function(item, character)
 end)
 
 Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(level, iseditor)
+    if not CONFIG then CONFIG=InitConfig() end
     RestoreMoggedWeapons()
     RestoreMoggedArmors()
     for item, name in pairs(modItemRoots) do
