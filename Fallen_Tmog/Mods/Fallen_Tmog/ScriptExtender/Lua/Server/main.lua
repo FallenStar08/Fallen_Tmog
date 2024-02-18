@@ -39,7 +39,7 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID then
                     if ArmorSlots[equipmentSlot] then
-                        if equipmentSlot=="VanityBody" then equipmentSlot="Breast" end
+                        if equipmentSlot == "VanityBody" then equipmentSlot = "Breast" end
                         BasicPrint("Armor Tmog for Slot : " .. tostring(equipmentSlot))
                         local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
                         if correspondingEquipment then
@@ -87,14 +87,22 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
             local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
             local itemEntity = _GE(item)
             if itemEntity and itemEntity.Equipable then
-                local modVars = GetModVariables()
                 local equipmentSlot = itemEntity.Equipable.Slot
-                if equipmentSlot=="VanityBody" then equipmentSlot="Breast" end
-                if bagOwnerUUID and ArmorSlots[equipmentSlot] and (modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID] and modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] and GUID(item) == modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot]) then
+                if equipmentSlot == "VanityBody" then equipmentSlot = "Breast" end
+                if bagOwnerUUID and ArmorSlots[equipmentSlot] then
+                    local modVars = GetModVariables()
+                    local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
+                        tostring(equipmentSlot))
                     BasicPrint(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
                         tostring(equipmentSlot)))
-                    modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] = nil
-                    SyncModVariables()
+                    if (modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID] and modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] and GUID(item) == modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot]) then
+                        if correspondingEquipment then
+                            RestoreOriginalArmorVisuals(_GE(correspondingEquipment))
+                            RefreshCharacterArmorVisuals(_GE(bagOwnerUUID))
+                        end
+                        modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] = nil
+                        SyncModVariables()
+                    end
                 end
             end
         end
@@ -168,4 +176,3 @@ Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(level, 
         GiveItemToEachPartyMember(item)
     end
 end)
-
