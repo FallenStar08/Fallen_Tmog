@@ -3,3 +3,13 @@ type "StatusData"
 data "StatusType" "BOOST"
 data "StatusPropertyFlags" "ForGameMaster;DisableOverhead;DisableCombatlog;DisablePortraitIndicator;IgnoreResting"
 data "Boosts" "Weight(-9999)"
+
+new entry "Fallen_HiddenItem"
+type "StatusData"
+data "Icon" "Action_SupremeSneak"
+data "StatusType" "BOOST"
+data "DisplayName" "he4fdceeag5b97g4562g881fgba3cb46e761a;1"
+data "Description" "h5f030f92gaedag4634ga278gee67772183d5;1"
+data "DescriptionParams" ""
+data "StatusPropertyFlags" "IgnoreResting;ApplyToDead"
+

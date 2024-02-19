@@ -1,8 +1,18 @@
 local modItemRoots = {
     ["ee9d149e-4558-4583-86f2-bd3dc01a034a"] = "armorBag",
-    ["7c515100-55f6-4dde-b46a-78099db32ace"] = "weaponBag"
+    ["7c515100-55f6-4dde-b46a-78099db32ace"] = "weaponBag",
+    ["0f6e837f-203c-4d9c-90de-4cd7c63d7337"] = "PotionInvisBreast",
+    ["549690dc-8fbd-43f2-87c2-673212535587"] = "potionInvisBoots",
+    ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "potionInvisCloak",
+    ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "potionInvisGloves"
 }
 
+HideSlots = {
+    ["0f6e837f-203c-4d9c-90de-4cd7c63d7337"] = "Breast",
+    ["549690dc-8fbd-43f2-87c2-673212535587"] = "Boots",
+    ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "Cloak",
+    ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "Gloves",
+}
 
 
 ArmorSlots = {
@@ -14,7 +24,7 @@ ArmorSlots = {
     ["Underwear"] = "Underwear",
     ["VanityBody"] = "Breast",
     ["VanityBoots"] = "Boots",
-    ["Shield"] = "Shield", --For some reason?
+    --["Shield"] = "Shield", --For some reason?
 }
 
 
@@ -39,14 +49,14 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
             if itemEntity and itemEntity.Equipable then
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID then
-                    if ArmorSlots[equipmentSlot] then
+                    if ArmorSlots[equipmentSlot]  then
                         equipmentSlot = ArmorSlots[equipmentSlot] --Convert Vanities into their corresponding real slots
                         BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
                         local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
-                        if correspondingEquipment then
+                        if correspondingEquipment and not IsArmorSlotInvisible(ArmorSlots[equipmentSlot], bagOwnerUUID) then
                             BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
                                 GetTranslatedName(correspondingEquipment)))
-                            TransmogArmorUltimateVersion(GUID(item), (GUID(correspondingEquipment)), bagOwnerUUID)
+                            TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                         end
                         SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
                     end
@@ -98,8 +108,9 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
                         tostring(equipmentSlot))
                     BasicDebug(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
                         tostring(equipmentSlot)))
-                    if (modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID] and modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] and GUID(item) == modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot]) then
-                        if correspondingEquipment then
+                    local tmogInfos=modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID]
+                    if (tmogInfos and tmogInfos[equipmentSlot] and GUID(item) == tmogInfos[equipmentSlot]) then
+                        if correspondingEquipment and not IsArmorSlotInvisible(equipmentSlot, bagOwnerUUID)then
                             RestoreOriginalArmorVisuals(_GE(correspondingEquipment))
                             RefreshCharacterArmorVisuals(_GE(bagOwnerUUID))
                         end
@@ -140,7 +151,6 @@ end)
 Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
     local itemEntity = _GE(item)
     if not itemEntity then return end
-
     local modVars = GetModVariables()
     local equipmentSlot = tostring(itemEntity.Equipable.Slot)
     local tmogInfos = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)]
@@ -152,11 +162,18 @@ Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
             BasicDebug(string.format("Equipped() Applying the skin of : %s on item : %s from modVars!",
                 GetTranslatedName(skinToApply), GetTranslatedName(item)))
             if slotType == "Armor" then
-                TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
+                --Check if should be invisibled
+                if IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character)then
+                    HideArmorPiece(GUID(item), character)
+                else
+                    TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
+                end
             else
                 TransmogWeapon(item, skinToApply, character, true)
             end
         end
+    elseif IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character)then
+        HideArmorPiece(GUID(item), character)
     end
 end)
 
@@ -173,11 +190,60 @@ Ext.Osiris.RegisterListener("Unequipped", 2, "before", function(item, character)
     end
 end)
 
-Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(level, iseditor)
+
+
+Ext.Osiris.RegisterListener("Combined", 7, "after", function(item1, item2, item3, item4, item5, character, newItem)
+    local modVars = GetModVariables()
+    if modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)] then
+        local skinEntity = _GE(newItem)
+        local equipmentSlot = skinEntity.Equipable.Slot
+        equipmentSlot = ArmorSlots[equipmentSlot]
+        local itemInfo = modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot]
+        if itemInfo == GUID(newItem) then
+            local correspondingEquipment = Osi.GetEquippedItem(character,
+                tostring(equipmentSlot))
+            if correspondingEquipment then
+                DelayedCall(333, function()
+                    HandleDyesForArmor(skinEntity, _GE(correspondingEquipment))
+                end)
+            end
+        end
+    end
+end)
+
+
+--Hide appearance potions
+Ext.Osiris.RegisterListener("TemplateUseStarted", 3, "after", function(character, itemTemplate, item)
+    if Osi.IsPartyMember(character, 1) == 1 then
+        character = GUID(character)
+        local slotToHide = HideSlots[GUID(itemTemplate)]
+        if slotToHide then
+            local correspondingEquipment = Osi.GetEquippedItem(character,
+                tostring(slotToHide))
+            if correspondingEquipment then
+                if Osi.HasActiveStatus(correspondingEquipment, FALLEN_BOOSTS[2]) == 0 then
+                    Osi.ApplyStatus(correspondingEquipment, FALLEN_BOOSTS[2], -1, 100, "") --Invisible Items
+                    BasicDebug("Invisibled the thing!")
+                    SaveArmorInfosToModVars(NULLUUID, character, slotToHide)
+                    HideArmorPiece(correspondingEquipment, character)
+                else
+                    RestoreArmorVisibility(correspondingEquipment, slotToHide, character)
+                end
+            end
+        end
+    end
+end)
+
+local function start()
     if not CONFIG then CONFIG = InitConfig() end
     RestoreMoggedWeapons()
     RestoreMoggedArmors()
     for item, name in pairs(modItemRoots) do
         GiveItemToEachPartyMember(item)
     end
-end)
+end
+
+
+Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", start)
+
+Ext.Events.ResetCompleted:Subscribe(start)

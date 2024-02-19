@@ -6,12 +6,12 @@
 			<children>
 				<node id="GameObjects">
 					<attribute id="MapKey" type="FixedString" value="ee9d149e-4558-4583-86f2-bd3dc01a034a" />
-					<attribute id="Name" type="LSString" value="Fallen_Tmog_ArmorSlotBag"/>
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_ArmorSlotBag" />
 					<attribute id="Type" type="FixedString" value="item" />
 					<attribute id="ParentTemplateId" type="FixedString" value="2e40240b-77d3-400b-bd6a-caff66a85833" />
-					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_ArmorSlotBag"/>
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_ArmorSlotBag" />
 					<attribute id="StoryItem" type="bool" value="True" />
-					<attribute id="VisualTemplate" type="FixedString" value="3d37919a-d049-fa8a-c124-c05749f72abf"/>
+					<attribute id="VisualTemplate" type="FixedString" value="3d37919a-d049-fa8a-c124-c05749f72abf" />
 					<attribute id="Icon" type="FixedString" value="Fallen_ICON_Tmog_ArmorBag" />
 					<attribute id="DisplayName" type="TranslatedString" handle="h3b2ce0b6g76afg4ec6g9753g45ce1eb93bf0" version="1" />
 					<attribute id="Description" type="TranslatedString" handle="h35101ed5gf449g48f2g9029g93444acb37de" version="1" />
@@ -20,26 +20,26 @@
 						<node id="Bounds">
 							<children>
 								<node id="Bound">
-									<attribute id="Height" type="float" value="2.40635" />
-									<attribute id="Max" type="fvec3" value="0.4150899 2.40635 0.2500001" />
-									<attribute id="Min" type="fvec3" value="-0.415088 0 -0.2500001" />
-									<attribute id="Radius" type="float" value="0.3862339" />
+									<attribute id="Height" type="float" value="2,40635" />
+									<attribute id="Max" type="fvec3" value="0,4150899 2,40635 0,2500001" />
+									<attribute id="Min" type="fvec3" value="-0,415088 0 -0,2500001" />
+									<attribute id="Radius" type="float" value="0,3862339" />
 									<attribute id="Shape" type="uint8" value="1" />
 									<attribute id="Type" type="uint8" value="0" />
 								</node>
 								<node id="Bound">
-									<attribute id="Height" type="float" value="2.40635" />
-									<attribute id="Max" type="fvec3" value="0.8301799 2.40635 0.5000002" />
-									<attribute id="Min" type="fvec3" value="-0.8301761 0 -0.5000002" />
-									<attribute id="Radius" type="float" value="0.7724677" />
+									<attribute id="Height" type="float" value="2,40635" />
+									<attribute id="Max" type="fvec3" value="0,8301799 2,40635 0,5000002" />
+									<attribute id="Min" type="fvec3" value="-0,8301761 0 -0,5000002" />
+									<attribute id="Radius" type="float" value="0,7724677" />
 									<attribute id="Shape" type="uint8" value="1" />
 									<attribute id="Type" type="uint8" value="1" />
 								</node>
 								<node id="Bound">
-									<attribute id="Height" type="float" value="2.40635" />
-									<attribute id="Max" type="fvec3" value="0.8301799 2.40635 0.5000002" />
-									<attribute id="Min" type="fvec3" value="-0.8301761 0 -0.5000002" />
-									<attribute id="Radius" type="float" value="0.7724677" />
+									<attribute id="Height" type="float" value="2,40635" />
+									<attribute id="Max" type="fvec3" value="0,8301799 2,40635 0,5000002" />
+									<attribute id="Min" type="fvec3" value="-0,8301761 0 -0,5000002" />
+									<attribute id="Radius" type="float" value="0,7724677" />
 									<attribute id="Shape" type="uint8" value="1" />
 									<attribute id="Type" type="uint8" value="2" />
 								</node>
@@ -49,15 +49,151 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="MapKey" type="FixedString" value="7c515100-55f6-4dde-b46a-78099db32ace" />
-					<attribute id="Name" type="LSString" value="Fallen_Tmog_WeaponBagSlot"/>
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_WeaponBagSlot" />
 					<attribute id="Type" type="FixedString" value="item" />
 					<attribute id="ParentTemplateId" type="FixedString" value="2e40240b-77d3-400b-bd6a-caff66a85833" />
-					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_WeaponBagSlot"/>
-					<attribute id="StoryItem" type="bool" value="True"/> 
-					<attribute id="Icon" type="FixedString" value="Fallen_ICON_Tmog_WeaponBag"/>
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_WeaponBagSlot" />
+					<attribute id="StoryItem" type="bool" value="True" />
+					<attribute id="Icon" type="FixedString" value="Fallen_ICON_Tmog_WeaponBag" />
 					<attribute id="DisplayName" type="TranslatedString" handle="he209db56gf0a1g48d6gafeag2cb2426a666a" version="1" />
 					<attribute id="Description" type="TranslatedString" handle="h89ad7720g52bdg41a9ga3d6ge62dcbe9d539" version="1" />
 					<attribute id="TechnicalDescription" type="TranslatedString" handle="hd4d53975gd560g4a36g9d74g0a10b563395a" version="1" />
+				</node>
+				<node id="GameObjects">
+					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
+					<attribute id="DisplayName" type="TranslatedString" handle="hc07df2ffg66b5g4695gac70g8c0cecfb0928" version="1" />
+					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="MapKey" type="FixedString" value="4cea80d0-cda3-4eb8-b483-a70256877a19" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideGloves" />
+					<attribute id="OnUseDescription" type="TranslatedString" handle="h96fe0a7bg14e9g433eg939ag14c386baf578" version="2" />
+					<attribute id="ParentTemplateId" type="FixedString" value="35bcfb10-ba86-4195-9de5-2d57b4e209f9" />
+					<attribute id="PhysicsTemplate" type="FixedString" value="2e331e09-71c0-4a7c-9510-5bdb34453cc9" />
+					<attribute id="PickupSound" type="FixedString" value="97565df5-52e7-3d7e-17be-be9ac825d061" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_Potion_HideGloves" />
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="UseSound" type="FixedString" value="ba3a74f8-c087-3b5a-870c-d62c4c3367bb" />
+					<attribute id="VisualTemplate" type="FixedString" value="ccc96c2e-9a1c-4df5-85cd-baec3e833436" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="int32" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="FixedString" value="" />
+											<attribute id="Conditions" type="LSString" value="" />
+											<attribute id="StatsId" type="FixedString" value="" />
+											<attribute id="Consume" type="bool" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+				<node id="GameObjects">
+					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
+					<attribute id="DisplayName" type="TranslatedString" handle="h5ba54efegb3bdg49a0g894cg5f579ebb776c" version="1" />
+					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="MapKey" type="FixedString" value="549690dc-8fbd-43f2-87c2-673212535587" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideBoots" />
+					<attribute id="OnUseDescription" type="TranslatedString" handle="h96fe0a7bg14e9g433eg939ag14c386baf578" version="2" />
+					<attribute id="ParentTemplateId" type="FixedString" value="35bcfb10-ba86-4195-9de5-2d57b4e209f9" />
+					<attribute id="PhysicsTemplate" type="FixedString" value="2e331e09-71c0-4a7c-9510-5bdb34453cc9" />
+					<attribute id="PickupSound" type="FixedString" value="97565df5-52e7-3d7e-17be-be9ac825d061" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_Potion_HideBoots" />
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="UseSound" type="FixedString" value="ba3a74f8-c087-3b5a-870c-d62c4c3367bb" />
+					<attribute id="VisualTemplate" type="FixedString" value="ccc96c2e-9a1c-4df5-85cd-baec3e833436" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="int32" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="FixedString" value="" />
+											<attribute id="Conditions" type="LSString" value="" />
+											<attribute id="StatsId" type="FixedString" value="" />
+											<attribute id="Consume" type="bool" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+				<node id="GameObjects">
+					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
+					<attribute id="DisplayName" type="TranslatedString" handle="h522b2a92g96f4g42eagbd6agf7797065ace4" version="1" />
+					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="MapKey" type="FixedString" value="0f6e837f-203c-4d9c-90de-4cd7c63d7337" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideChest" />
+					<attribute id="OnUseDescription" type="TranslatedString" handle="h96fe0a7bg14e9g433eg939ag14c386baf578" version="2" />
+					<attribute id="ParentTemplateId" type="FixedString" value="35bcfb10-ba86-4195-9de5-2d57b4e209f9" />
+					<attribute id="PhysicsTemplate" type="FixedString" value="2e331e09-71c0-4a7c-9510-5bdb34453cc9" />
+					<attribute id="PickupSound" type="FixedString" value="97565df5-52e7-3d7e-17be-be9ac825d061" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_Potion_HideChest" />
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="UseSound" type="FixedString" value="ba3a74f8-c087-3b5a-870c-d62c4c3367bb" />
+					<attribute id="VisualTemplate" type="FixedString" value="ccc96c2e-9a1c-4df5-85cd-baec3e833436" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="int32" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="FixedString" value="" />
+											<attribute id="Conditions" type="LSString" value="" />
+											<attribute id="StatsId" type="FixedString" value="" />
+											<attribute id="Consume" type="bool" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+				<node id="GameObjects">
+					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
+					<attribute id="DisplayName" type="TranslatedString" handle="ha7b915a2gf9b5g4675g9e5dge7fb4f1ac491" version="1" />
+					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="MapKey" type="FixedString" value="b35dc03b-2224-4943-b060-3759033c8c6e" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideCloak" />
+					<attribute id="OnUseDescription" type="TranslatedString" handle="h96fe0a7bg14e9g433eg939ag14c386baf578" version="2" />
+					<attribute id="ParentTemplateId" type="FixedString" value="35bcfb10-ba86-4195-9de5-2d57b4e209f9" />
+					<attribute id="PhysicsTemplate" type="FixedString" value="2e331e09-71c0-4a7c-9510-5bdb34453cc9" />
+					<attribute id="PickupSound" type="FixedString" value="97565df5-52e7-3d7e-17be-be9ac825d061" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_Potion_HideCloak" />
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="UseSound" type="FixedString" value="ba3a74f8-c087-3b5a-870c-d62c4c3367bb" />
+					<attribute id="VisualTemplate" type="FixedString" value="ccc96c2e-9a1c-4df5-85cd-baec3e833436" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="int32" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="FixedString" value="" />
+											<attribute id="Conditions" type="LSString" value="" />
+											<attribute id="StatsId" type="FixedString" value="" />
+											<attribute id="Consume" type="bool" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
 				</node>
 			</children>
 		</node>
