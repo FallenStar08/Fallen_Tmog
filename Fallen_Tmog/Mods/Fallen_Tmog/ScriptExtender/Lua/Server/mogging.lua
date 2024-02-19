@@ -1,4 +1,5 @@
 RegisterUserVariable("Fallen_TmogArmorOriginalVisuals")
+RegisterUserVariable("Fallen_TmogArmorOriginalDye")
 RegisterUserVariable("Fallen_OriginalWeaponInfos")
 RegisterModVariable("Fallen_TmogInfos")
 
@@ -72,10 +73,14 @@ end
 ---Basically do a tmog with the original infos
 ---@param armorEntity ItemEntity
 function RestoreOriginalArmorVisuals(armorEntity)
+    if armorEntity.Vars.Fallen_TmogArmorOriginalDye then
+        armorEntity.ItemDye.Color = armorEntity.Vars.Fallen_TmogArmorOriginalDye
+        armorEntity:Replicate("ItemDye")
+    end
     ApplyVisualsFromTable(armorEntity, armorEntity.Vars.Fallen_TmogArmorOriginalVisuals)
 end
 
----Create a new armor using skin from skin and data from equippedPiece on char
+---Do the tmogging of the armor
 ---@param skin GUIDSTRING
 ---@param equippedPiece GUIDSTRING
 ---@param character GUIDSTRING
@@ -83,6 +88,18 @@ function TransmogArmorUltimateVersion(skin, equippedPiece, character)
     local skinEntity = _GE(skin)
     local equippedPieceEntity = _GE(equippedPiece)
     local originalInfos = Table.DeepCopy(equippedPieceEntity.ServerItem.Template.Equipment.Visuals)
+    if equippedPieceEntity.ItemDye then
+        local equippedPieceDye = equippedPieceEntity.ItemDye.Color
+        --Save original dye
+        equippedPieceEntity.Vars.Fallen_TmogArmorOriginalDye = equippedPieceDye
+    end
+    
+    if skinEntity.ItemDye then
+        local skinDye = skinEntity.ItemDye.Color
+        equippedPieceEntity.ItemDye.Color = skinDye
+        equippedPieceEntity:Replicate("ItemDye")
+    end
+
     SaveOriginalArmorInfos(equippedPieceEntity, originalInfos)
     CopyVisuals(equippedPieceEntity, skinEntity)
     RefreshCharacterArmorVisuals(_GE(character))
@@ -109,8 +126,8 @@ function RestoreMoggedWeapons()
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, WeaponSlots[slot])
                 if correspondingEquipment then
                     BasicDebug(string.format("Restoring appearance for weapon : %s for slot : %s Osislot : %s",
-                    correspondingEquipment or "", slot, WeaponSlots[slot]))
-                    TransmogWeapon(correspondingEquipment, skin, characterUUID,true)
+                        correspondingEquipment or "", slot, WeaponSlots[slot]))
+                    TransmogWeapon(correspondingEquipment, skin, characterUUID, true)
                 end
             end
         end
@@ -127,7 +144,7 @@ function RestoreMoggedArmors()
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, tostring(slot))
                 if correspondingEquipment then
                     BasicDebug(string.format("Restoring appearance for armor piece : %s for slot : %s",
-                    correspondingEquipment or "", slot))
+                        correspondingEquipment or "", slot))
                     TransmogArmorUltimateVersion(skin, correspondingEquipment, characterUUID)
                     RefreshCharacterArmorVisuals(_GE(characterUUID))
                 end

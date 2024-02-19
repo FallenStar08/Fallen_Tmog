@@ -1,0 +1,5 @@
+new entry "Fallen_WeightlessItem"
+type "StatusData"
+data "StatusType" "BOOST"
+data "StatusPropertyFlags" "ForGameMaster;DisableOverhead;DisableCombatlog;DisablePortraitIndicator;IgnoreResting"
+data "Boosts" "Weight(-9999)"
