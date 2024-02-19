@@ -40,10 +40,10 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                 if bagOwnerUUID then
                     if ArmorSlots[equipmentSlot] then
                         if equipmentSlot == "VanityBody" then equipmentSlot = "Breast" end
-                        BasicPrint("Armor Tmog for Slot : " .. tostring(equipmentSlot))
+                        BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
                         local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
                         if correspondingEquipment then
-                            BasicPrint(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
+                            BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
                                 GetTranslatedName(correspondingEquipment)))
                             TransmogArmorUltimateVersion(GUID(item), (GUID(correspondingEquipment)), bagOwnerUUID)
                         end
@@ -62,11 +62,11 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID then
                     if WeaponSlots[equipmentSlot] then
-                        BasicPrint("Weapon Tmog for Slot : " .. tostring(equipmentSlot))
+                        BasicDebug("Weapon Tmog for Slot : " .. tostring(equipmentSlot))
                         local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
                             tostring(WeaponSlots[equipmentSlot]))
                         if correspondingEquipment then
-                            BasicPrint(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
+                            BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
                                 GetTranslatedName(correspondingEquipment)))
                             TransmogWeapon(correspondingEquipment, item, bagOwnerUUID)
                         end
@@ -93,7 +93,7 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
                     local modVars = GetModVariables()
                     local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
                         tostring(equipmentSlot))
-                    BasicPrint(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
+                    BasicDebug(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
                         tostring(equipmentSlot)))
                     if (modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID] and modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] and GUID(item) == modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot]) then
                         if correspondingEquipment then
@@ -116,11 +116,11 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID and WeaponSlots[equipmentSlot] then
                     local modVars = GetModVariables()
-                    BasicPrint("Removed Weapon from bag for Slot : " .. tostring(equipmentSlot))
+                    BasicDebug("Removed Weapon from bag for Slot : " .. tostring(equipmentSlot))
                     local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
                         tostring(WeaponSlots[equipmentSlot]))
                     if correspondingEquipment then
-                        BasicPrint("Restoring Equipped Piece's visuals")
+                        BasicDebug("Restoring Equipped Piece's visuals")
                         --TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                         RestoreOriginalWeaponVisuals(_GE(correspondingEquipment))
                         RefreshCharacterArmorVisuals(bagOwnerEntity)
@@ -145,7 +145,7 @@ Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
         local skinToApply = tmogInfos[equipmentSlot]
         local slotType = ArmorSlots[equipmentSlot] and "Armor" or (WeaponSlots[equipmentSlot] and "Weapon")
         if slotType then
-            BasicPrint(string.format("Equipped() Applying the skin of : %s on item : %s from modVars!",
+            BasicDebug(string.format("Equipped() Applying the skin of : %s on item : %s from modVars!",
                 GetTranslatedName(skinToApply), GetTranslatedName(item)))
             if slotType == "Armor" then
                 TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
@@ -159,11 +159,11 @@ end)
 Ext.Osiris.RegisterListener("Unequipped", 2, "before", function(item, character)
     local itemEntity = _GE(item)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
-        BasicPrint("Unequip restoring original weapon visuals")
+        BasicDebug("Unequip restoring original weapon visuals")
         RestoreOriginalWeaponVisuals(itemEntity)
         RefreshCharacterArmorVisuals(_GE(character))
     elseif itemEntity.Vars.Fallen_TmogArmorOriginalVisuals then
-        BasicPrint("Unequip restoring original armor visuals")
+        BasicDebug("Unequip restoring original armor visuals")
         RestoreOriginalArmorVisuals(itemEntity)
         RefreshCharacterArmorVisuals(_GE(character))
     end

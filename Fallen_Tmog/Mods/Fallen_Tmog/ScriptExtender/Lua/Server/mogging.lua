@@ -26,14 +26,14 @@ end
 ---@param itemEntity ItemEntity
 local function saveOriginalWeaponInfos(itemEntity)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
-        BasicPrint("Already saved Original w infos")
+        BasicDebug("Already saved Original w infos")
         return
     end
     local dataToSave = { ["OriginalVisualId"] = itemEntity.GameObjectVisual.RootTemplateId }
     itemEntity.Vars.Fallen_OriginalWeaponInfos = dataToSave
     SyncUserVariables()
-    BasicPrint("Saved state for weapon " .. EntityToUuid(itemEntity))
-    BasicPrint(dataToSave)
+    BasicDebug("Saved state for weapon " .. EntityToUuid(itemEntity))
+    BasicDebug(dataToSave)
 end
 
 -- -------------------------------------------------------------------------- --
@@ -58,11 +58,11 @@ end
 function SaveOriginalArmorInfos(armorEntity, infoTable)
     if armorEntity then
         if armorEntity.Vars.Fallen_TmogArmorOriginalVisuals then
-            BasicPrint(string.format("Armor visual infos already saved for %s!",
+            BasicDebug(string.format("Armor visual infos already saved for %s!",
                 GetTranslatedName(EntityToUuid(armorEntity) or "")))
             return
         end
-        BasicPrint(string.format("Saved new original armor visual infos for armor %s!",
+        BasicDebug(string.format("Saved new original armor visual infos for armor %s!",
             GetTranslatedName(EntityToUuid(armorEntity) or "")))
         armorEntity.Vars.Fallen_TmogArmorOriginalVisuals = Ext.Types.Serialize(infoTable)
         SyncUserVariables()
@@ -93,7 +93,7 @@ end
 function RestoreOriginalWeaponVisuals(itemEntity)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
         local uuid = EntityToUuid(itemEntity)
-        BasicPrint("Restoring item state for weapon : " .. uuid)
+        BasicDebug("Restoring item state for weapon : " .. uuid)
         itemEntity.GameObjectVisual.RootTemplateId = itemEntity.Vars.Fallen_OriginalWeaponInfos.OriginalVisualId
         replicateWeaponComponents(itemEntity)
     end
@@ -108,7 +108,7 @@ function RestoreMoggedWeapons()
             if WeaponSlots[slot] then
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, WeaponSlots[slot])
                 if correspondingEquipment then
-                    BasicPrint(string.format("Restoring appearance for weapon : %s for slot : %s Osislot : %s",
+                    BasicDebug(string.format("Restoring appearance for weapon : %s for slot : %s Osislot : %s",
                     correspondingEquipment or "", slot, WeaponSlots[slot]))
                     TransmogWeapon(correspondingEquipment, skin, characterUUID,true)
                 end
@@ -126,7 +126,7 @@ function RestoreMoggedArmors()
             for slot, skin in pairs(characterEquipments) do
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, tostring(slot))
                 if correspondingEquipment then
-                    BasicPrint(string.format("Restoring appearance for armor piece : %s for slot : %s",
+                    BasicDebug(string.format("Restoring appearance for armor piece : %s for slot : %s",
                     correspondingEquipment or "", slot))
                     TransmogArmorUltimateVersion(skin, correspondingEquipment, characterUUID)
                     RefreshCharacterArmorVisuals(_GE(characterUUID))
@@ -163,6 +163,9 @@ end
 ---Replicate ArmorSetsState to trigger a refresh of the armor visuals
 ---@param entity CharacterEntity
 function RefreshCharacterArmorVisuals(entity)
+    if not entity.ArmorSetState then
+        entity:CreateComponent("ArmorSetState")
+    end
     entity:Replicate("ArmorSetState")
 end
 
