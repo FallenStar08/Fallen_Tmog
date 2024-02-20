@@ -206,7 +206,6 @@ end
 function IsArmorSlotInvisible(slot,character)
     local modVars = GetModVariables()
     local invisTmogInfos = modVars.Fallen_TmogInfos_Invisibles and modVars.Fallen_TmogInfos_Invisibles[GUID(character)]
-    _D(invisTmogInfos)
     if invisTmogInfos and invisTmogInfos[ArmorSlots[slot]] then
         return true
     end

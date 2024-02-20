@@ -7,6 +7,7 @@ local modItemRoots = {
     ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "potionInvisGloves"
 }
 
+---Get Visibility status for each slot and update relevent loca entries
 local function updatePotionsDescription()
     local modVars = GetModVariables()
     local result = {}
@@ -25,25 +26,23 @@ local function updatePotionsDescription()
         end
     end
 
+    -- Translated strings for visibility
+    local visibleText = GetTranslatedString(Handles["Visible"])
+    local invisibleText = GetTranslatedString(Handles["Invisible"])
+    
+    local greenHex = "#00FF00"  -- Green
+    local orangeHex = "#FFA500"  -- Orange
+    
     -- Generate description content for each description slot
     for _, slot in pairs(descriptionSlots) do
+        local slotDescriptionHandle = SlotToDescriptionHandle[slot]
         descriptionContent[slot] = ""
         for _, member in pairs(SQUADIES) do
             local visibility = result[member] and result[member][slot]
-            local greenHex = RgbToHex(0, 255, 0)
-            local redHex = RgbToHex(255, 0, 0)
-            local orangeHex = RgbToHex(255, 165, 0)
-            --<font color='%s'>%s</font>
-            --TODO Cache GetTranslatedShit instead
-            local translatedVisibility = visibility and ColorTranslatedString(GetTranslatedString(Handles["Invisible"]),orangeHex) or ColorTranslatedString(GetTranslatedString(Handles["Visible"]),greenHex)
-
+            local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or ColorTranslatedString(visibleText, greenHex)
             descriptionContent[slot] = descriptionContent[slot] .. GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
         end
-    end
-
-    -- Update translated strings for each description slot
-    for _, slot in pairs(descriptionSlots) do
-        UpdateTranslatedString(Handles[SlotToDescriptionHandle[slot]], descriptionContent[slot])
+        UpdateTranslatedString(Handles[slotDescriptionHandle], descriptionContent[slot])
     end
 end
 
