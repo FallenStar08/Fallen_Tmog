@@ -63,7 +63,7 @@
 					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
 					<attribute id="DisplayName" type="TranslatedString" handle="hc07df2ffg66b5g4695gac70g8c0cecfb0928" version="1" />
 					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
-					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="Icon" type="FixedString" value="FALLEN_ICON_Tmog_PotionInvisibleGloves" />
 					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
 					<attribute id="MapKey" type="FixedString" value="4cea80d0-cda3-4eb8-b483-a70256877a19" />
 					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideGloves" />
@@ -97,7 +97,7 @@
 					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
 					<attribute id="DisplayName" type="TranslatedString" handle="h5ba54efegb3bdg49a0g894cg5f579ebb776c" version="1" />
 					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
-					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="Icon" type="FixedString" value="FALLEN_ICON_Tmog_PotionInvisibleBoots" />
 					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
 					<attribute id="MapKey" type="FixedString" value="549690dc-8fbd-43f2-87c2-673212535587" />
 					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideBoots" />
@@ -131,7 +131,7 @@
 					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
 					<attribute id="DisplayName" type="TranslatedString" handle="h522b2a92g96f4g42eagbd6agf7797065ace4" version="1" />
 					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
-					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="Icon" type="FixedString" value="FALLEN_ICON_Tmog_PotionInvisibleChest" />
 					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
 					<attribute id="MapKey" type="FixedString" value="0f6e837f-203c-4d9c-90de-4cd7c63d7337" />
 					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideChest" />
@@ -165,7 +165,7 @@
 					<attribute id="Description" type="TranslatedString" handle="hac99f4c9g11c4g4278gbf79g94fcf88f9b0d" version="1" />
 					<attribute id="DisplayName" type="TranslatedString" handle="ha7b915a2gf9b5g4675g9e5dge7fb4f1ac491" version="1" />
 					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
-					<attribute id="Icon" type="FixedString" value="Item_CONS_Drink_Water_A" />
+					<attribute id="Icon" type="FixedString" value="FALLEN_ICON_Tmog_PotionInvisibleCloak" />
 					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
 					<attribute id="MapKey" type="FixedString" value="b35dc03b-2224-4943-b060-3759033c8c6e" />
 					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideCloak" />
