@@ -34,6 +34,7 @@ local function updatePotionsDescription()
             local redHex = RgbToHex(255, 0, 0)
             local orangeHex = RgbToHex(255, 165, 0)
             --<font color='%s'>%s</font>
+            --TODO Cache GetTranslatedShit instead
             local translatedVisibility = visibility and ColorTranslatedString(GetTranslatedString(Handles["Invisible"]),orangeHex) or ColorTranslatedString(GetTranslatedString(Handles["Visible"]),greenHex)
 
             descriptionContent[slot] = descriptionContent[slot] .. GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
