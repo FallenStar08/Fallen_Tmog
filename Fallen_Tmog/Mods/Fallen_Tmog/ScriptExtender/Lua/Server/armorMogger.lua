@@ -138,12 +138,29 @@ function RestoreMoggedArmors()
         for characterUUID, characterEquipments in pairs(data) do
             for slot, skin in pairs(characterEquipments) do
                 local correspondingEquipment = Osi.GetEquippedItem(characterUUID, tostring(slot))
-                if correspondingEquipment and not IsArmorSlotInvisible(slot, characterUUID)  then
+                local invisible=IsArmorSlotInvisible(slot, characterUUID)
+                BasicDebug(string.format("armor piece : %s is %s",
+                correspondingEquipment or "", invisible))
+                if correspondingEquipment and not invisible then
                     BasicDebug(string.format("Restoring appearance for armor piece : %s for slot : %s",
                         correspondingEquipment or "", slot))
                     TransmogArmorUltimateVersion(skin, correspondingEquipment, characterUUID)
                     RefreshCharacterArmorVisuals(_GE(characterUUID))
                 elseif correspondingEquipment then
+                    BasicDebug(string.format("Hiding appearance for armor piece : %s for slot : %s",
+                    correspondingEquipment or "", slot))
+                    HideArmorPiece(correspondingEquipment, characterUUID)
+                    RefreshCharacterArmorVisuals(_GE(characterUUID))
+                end
+            end
+        end
+    end
+    if modVars.Fallen_TmogInfos_Invisibles then
+        local data = modVars.Fallen_TmogInfos_Invisibles
+        for characterUUID, characterEquipments in pairs(data) do
+            for slot, invisibility in pairs(characterEquipments) do
+                if invisibility then
+                    local correspondingEquipment = Osi.GetEquippedItem(characterUUID, tostring(slot))
                     BasicDebug(string.format("Hiding appearance for armor piece : %s for slot : %s",
                     correspondingEquipment or "", slot))
                     HideArmorPiece(correspondingEquipment, characterUUID)
@@ -189,6 +206,7 @@ end
 function IsArmorSlotInvisible(slot,character)
     local modVars = GetModVariables()
     local invisTmogInfos = modVars.Fallen_TmogInfos_Invisibles and modVars.Fallen_TmogInfos_Invisibles[GUID(character)]
+    _D(invisTmogInfos)
     if invisTmogInfos and invisTmogInfos[ArmorSlots[slot]] then
         return true
     end

@@ -14,11 +14,11 @@
 	<content contentuid="h79952decgcd56g479bg8f1egae344378da03" version="1">Show Chest</content>
 	<content contentuid="ha7b915a2gf9b5g4675g9e5dge7fb4f1ac491" version="1">Hide Cloak</content>
 	<content contentuid="hcd2ff13eg0826g46b5g9003gde71425ee023" version="1">Show Cloak</content>
-	<content contentuid="he4fdceeag5b97g4562g881fgba3cb46e761a" version="1">Invisible equipment piece</content>
-	<!-- <content contentuid="h1dcc962ag45cag4e4eg8e65g2db6b14c7eb6" version="1">Killing with style.</content>
-	<content contentuid="h95a0daafg3e8bg4127ga3b7gf2550fb5b414" version="1">Killing with style.</content>
-	<content contentuid="h9adbd35agc653g4d85gb96dg2494ca4731a7" version="1">Killing with style.</content>
-	<content contentuid="h1f82547egb314g490dg89ddgecfaa929f680" version="1">Killing with style.</content>
-	<content contentuid="hc0011734gbfa1g4276g9f50gdc2c02c56832" version="1">Killing with style.</content>
-	<content contentuid="h97fc23c6gf453g4950gb4f0gc5d9e44249f0" version="1">Killing with style.</content> -->
+	<content contentuid="he4fdceeag5b97g4562g881fgba3cb46e761a" version="1">Invisible Equipment</content>
+	<content contentuid="h1dcc962ag45cag4e4eg8e65g2db6b14c7eb6" version="1">Boots Potion Description</content>
+	<content contentuid="h95a0daafg3e8bg4127ga3b7gf2550fb5b414" version="1">Gloves Potion Description</content>
+	<content contentuid="h9adbd35agc653g4d85gb96dg2494ca4731a7" version="1">Chest Potion Description</content>
+	<content contentuid="h1f82547egb314g490dg89ddgecfaa929f680" version="1">Cloak Potion Description</content>
+	<content contentuid="hc0011734gbfa1g4276g9f50gdc2c02c56832" version="1">visible</content>
+	<content contentuid="h97fc23c6gf453g4950gb4f0gc5d9e44249f0" version="1">invisible</content>
 </contentList>

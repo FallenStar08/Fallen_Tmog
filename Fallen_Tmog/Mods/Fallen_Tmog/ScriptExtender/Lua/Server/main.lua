@@ -7,34 +7,44 @@ local modItemRoots = {
     ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "potionInvisGloves"
 }
 
-HideSlots = {
-    ["0f6e837f-203c-4d9c-90de-4cd7c63d7337"] = "Breast",
-    ["549690dc-8fbd-43f2-87c2-673212535587"] = "Boots",
-    ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "Cloak",
-    ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "Gloves",
-}
+local function updatePotionsDescription()
+    local modVars = GetModVariables()
+    local result = {}
+    local descriptionSlots = { "Breast", "Gloves", "Boots", "Cloak" }
+    local descriptionContent = {}
+    GetSquadies()
 
+    --Get visibility information
+    for _, member in pairs(SQUADIES) do
+        local invisTmogInfos = modVars.Fallen_TmogInfos_Invisibles[member]
+        if invisTmogInfos then
+            for slot, visibility in pairs(invisTmogInfos) do
+                result[member] = result[member] or {}
+                result[member][slot] = visibility
+            end
+        end
+    end
 
-ArmorSlots = {
-    ["Breast"] = "Breast",
-    ["Boots"] = "Boots",
-    ["Cloak"] = "Cloak",
-    ["Gloves"] = "Gloves",
-    ["Helmet"] = "Helmet",
-    ["Underwear"] = "Underwear",
-    ["VanityBody"] = "Breast",
-    ["VanityBoots"] = "Boots",
-    --["Shield"] = "Shield", --For some reason?
-}
+    -- Generate description content for each description slot
+    for _, slot in pairs(descriptionSlots) do
+        descriptionContent[slot] = ""
+        for _, member in pairs(SQUADIES) do
+            local visibility = result[member] and result[member][slot]
+            local greenHex = RgbToHex(0, 255, 0)
+            local redHex = RgbToHex(255, 0, 0)
+            local orangeHex = RgbToHex(255, 165, 0)
+            --<font color='%s'>%s</font>
+            local translatedVisibility = visibility and ColorTranslatedString(GetTranslatedString(Handles["Invisible"]),orangeHex) or ColorTranslatedString(GetTranslatedString(Handles["Visible"]),greenHex)
 
+            descriptionContent[slot] = descriptionContent[slot] .. GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
+        end
+    end
 
-
-WeaponSlots = {
-    ["MeleeMainHand"] = "Melee Main Weapon",
-    ["MeleeOffHand"] = "Melee Offhand Weapon",
-    ["RangedMainHand"] = "Ranged Main Weapon",
-    ["RangedOffHand"] = "Ranged Offhand Weapon",
-}
+    -- Update translated strings for each description slot
+    for _, slot in pairs(descriptionSlots) do
+        UpdateTranslatedString(Handles[SlotToDescriptionHandle[slot]], descriptionContent[slot])
+    end
+end
 
 
 
@@ -49,7 +59,7 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
             if itemEntity and itemEntity.Equipable then
                 local equipmentSlot = itemEntity.Equipable.Slot
                 if bagOwnerUUID then
-                    if ArmorSlots[equipmentSlot]  then
+                    if ArmorSlots[equipmentSlot] then
                         equipmentSlot = ArmorSlots[equipmentSlot] --Convert Vanities into their corresponding real slots
                         BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
                         local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
@@ -108,9 +118,9 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
                         tostring(equipmentSlot))
                     BasicDebug(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
                         tostring(equipmentSlot)))
-                    local tmogInfos=modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID]
+                    local tmogInfos = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID]
                     if (tmogInfos and tmogInfos[equipmentSlot] and GUID(item) == tmogInfos[equipmentSlot]) then
-                        if correspondingEquipment and not IsArmorSlotInvisible(equipmentSlot, bagOwnerUUID)then
+                        if correspondingEquipment and not IsArmorSlotInvisible(equipmentSlot, bagOwnerUUID) then
                             RestoreOriginalArmorVisuals(_GE(correspondingEquipment))
                             RefreshCharacterArmorVisuals(_GE(bagOwnerUUID))
                         end
@@ -163,7 +173,7 @@ Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
                 GetTranslatedName(skinToApply), GetTranslatedName(item)))
             if slotType == "Armor" then
                 --Check if should be invisibled
-                if IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character)then
+                if IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character) then
                     HideArmorPiece(GUID(item), character)
                 else
                     TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
@@ -172,7 +182,7 @@ Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
                 TransmogWeapon(item, skinToApply, character, true)
             end
         end
-    elseif IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character)then
+    elseif IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character) then
         HideArmorPiece(GUID(item), character)
     end
 end)
@@ -221,7 +231,7 @@ Ext.Osiris.RegisterListener("TemplateUseStarted", 3, "after", function(character
             local correspondingEquipment = Osi.GetEquippedItem(character,
                 tostring(slotToHide))
             if correspondingEquipment then
-                if Osi.HasActiveStatus(correspondingEquipment, FALLEN_BOOSTS[2]) == 0 then
+                if Osi.HasActiveStatus(correspondingEquipment, FALLEN_BOOSTS[2]) == 0 and not IsArmorSlotInvisible(slotToHide, character) then
                     Osi.ApplyStatus(correspondingEquipment, FALLEN_BOOSTS[2], -1, 100, "") --Invisible Items
                     BasicDebug("Invisibled the thing!")
                     SaveArmorInfosToModVars(NULLUUID, character, slotToHide)
@@ -230,6 +240,7 @@ Ext.Osiris.RegisterListener("TemplateUseStarted", 3, "after", function(character
                     RestoreArmorVisibility(correspondingEquipment, slotToHide, character)
                 end
             end
+            updatePotionsDescription()
         end
     end
 end)
@@ -241,6 +252,7 @@ local function start()
     for item, name in pairs(modItemRoots) do
         GiveItemToEachPartyMember(item)
     end
+    updatePotionsDescription()
 end
 
 
