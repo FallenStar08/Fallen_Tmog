@@ -10,6 +10,7 @@ local modItemRoots = {
 ---Get Visibility status for each slot and update relevent loca entries
 local function updatePotionsDescription()
     local modVars = GetModVariables()
+    if not modVars.Fallen_TmogInfos_Invisibles then return end
     local result = {}
     local descriptionSlots = { "Breast", "Gloves", "Boots", "Cloak" }
     local descriptionContent = {}
