@@ -28,8 +28,8 @@ local function updatePotionsDescription()
     end
 
     -- Translated strings for visibility
-    local visibleText = GetTranslatedString(Handles["Visible"])
-    local invisibleText = GetTranslatedString(Handles["Invisible"])
+    local visibleText = GetTranslatedString(Handles["Visible"]) or "Visible"
+    local invisibleText = GetTranslatedString(Handles["Invisible"]) or "Invisible"
     
     local greenHex = "#00FF00"  -- Green
     local orangeHex = "#FFA500"  -- Orange
