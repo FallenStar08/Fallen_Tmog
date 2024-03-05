@@ -199,6 +199,87 @@
 						</node>
 					</children>
 				</node>
+				<node id="GameObjects">
+					<attribute id="Description" type="TranslatedString" handle="h41996d3eg34a2g41e5gbbb6g3472820133c0" version="1" />
+					<attribute id="TechnicalDescription" type="TranslatedString" handle="h7b5dfe6fgad75g4a89g9020gecbebd3ffd1c" version="1" />
+					<attribute id="DisplayName" type="TranslatedString" handle="heb368e69gc535g43e8gbe6ag4d2fb3a99299" version="1" />
+					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="Icon" type="FixedString" value="FALLEN_ICON_Tmog_PotionInvisibleMeleeMainHand" />
+					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="MapKey" type="FixedString" value="45e3e30c-75e0-452e-980d-6581f002a5af" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideMeleeMainHand" />
+					<attribute id="OnUseDescription" type="TranslatedString" handle="h96fe0a7bg14e9g433eg939ag14c386baf578" version="2" />
+					<attribute id="ParentTemplateId" type="FixedString" value="35bcfb10-ba86-4195-9de5-2d57b4e209f9" />
+					<attribute id="PhysicsTemplate" type="FixedString" value="2e331e09-71c0-4a7c-9510-5bdb34453cc9" />
+					<attribute id="PickupSound" type="FixedString" value="97565df5-52e7-3d7e-17be-be9ac825d061" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_Potion_HideMeleeMainHand" />
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="UseSound" type="FixedString" value="ba3a74f8-c087-3b5a-870c-d62c4c3367bb" />
+					<attribute id="VisualTemplate" type="FixedString" value="ccc96c2e-9a1c-4df5-85cd-baec3e833436" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="int32" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="FixedString" value="" />
+											<attribute id="Conditions" type="LSString" value="" />
+											<attribute id="StatsId" type="FixedString" value="" />
+											<attribute id="Consume" type="bool" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+				<node id="GameObjects">
+					<attribute id="Description" type="TranslatedString" handle="h41996d3eg34a2g41e5gbbb6g3472820133c0" version="1" />
+					<attribute id="TechnicalDescription" type="TranslatedString" handle="ha3cbd677gc7aag4a26g8f8fgc649d495bc24" version="1" />
+					<attribute id="DisplayName" type="TranslatedString" handle="h41fb5cbfg5625g4e3fg85a3g28e9a891f261" version="1" />
+					<attribute id="DropSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="Icon" type="FixedString" value="FALLEN_ICON_Tmog_PotionInvisibleMeleeOffHand" />
+					<attribute id="InventoryMoveSound" type="FixedString" value="820221fa-5b87-7b87-3487-57ad0259f358" />
+					<attribute id="MapKey" type="FixedString" value="d573df23-4156-415d-abfb-6a14ca9c9402" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_Potion_HideMeleeOffHand" />
+					<attribute id="OnUseDescription" type="TranslatedString" handle="h96fe0a7bg14e9g433eg939ag14c386baf578" version="2" />
+					<attribute id="ParentTemplateId" type="FixedString" value="35bcfb10-ba86-4195-9de5-2d57b4e209f9" />
+					<attribute id="PhysicsTemplate" type="FixedString" value="2e331e09-71c0-4a7c-9510-5bdb34453cc9" />
+					<attribute id="PickupSound" type="FixedString" value="97565df5-52e7-3d7e-17be-be9ac825d061" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_Potion_HideMeleeOffHand" />
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="UseSound" type="FixedString" value="ba3a74f8-c087-3b5a-870c-d62c4c3367bb" />
+					<attribute id="VisualTemplate" type="FixedString" value="ccc96c2e-9a1c-4df5-85cd-baec3e833436" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="int32" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="FixedString" value="" />
+											<attribute id="Conditions" type="LSString" value="" />
+											<attribute id="StatsId" type="FixedString" value="" />
+											<attribute id="Consume" type="bool" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="FixedString" value="7c7890a2-a135-409e-a92a-69629288485d" />
+					<attribute id="Name" type="LSString" value="Fallen_InvisibleShit" />
+					<attribute id="Type" type="FixedString" value="item"/>
+					<attribute id="Stats" type="FixedString" value="Fallen_InvisibleShit" />
+					<attribute id="StoryItem" type="bool" value="True" />
+					<attribute id="Icon" type="FixedString" value="Fallen_InvisibleShit" />
+					<attribute id="DisplayName" type="TranslatedString" handle="" version="1" />
+					<attribute id="Description" type="TranslatedString" handle="" version="1" />
+					<attribute id="TechnicalDescription" type="TranslatedString" handle="" version="1" />
+				</node>
 			</children>
 		</node>
 	</region>

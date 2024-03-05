@@ -7,14 +7,20 @@ local function replicateWeaponComponents(itemEntity)
     itemEntity:Replicate("GameObjectVisual")
 end
 
----@param itemSkin ItemEntity
+---@param itemSkin ItemEntity|GUIDSTRING
 ---@param character GUIDSTRING
 ---@param equipmentSlot EQUIPMENTSLOT
 function SaveWeaponInfosToModVars(itemSkin, character, equipmentSlot)
     local modVars = GetModVariables()
-    if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos = {} end
-    if not modVars.Fallen_TmogInfos[character] then modVars.Fallen_TmogInfos[character] = {} end
-    modVars.Fallen_TmogInfos[GUID(character)][tostring(equipmentSlot)] = itemSkin.GameObjectVisual.RootTemplateId
+    if type(itemSkin)=="string" then
+        if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos = {} end
+        if not modVars.Fallen_TmogInfos[character] then modVars.Fallen_TmogInfos[character] = {} end
+        modVars.Fallen_TmogInfos[GUID(character)][tostring(equipmentSlot)] = itemSkin
+    else
+        if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos = {} end
+        if not modVars.Fallen_TmogInfos[character] then modVars.Fallen_TmogInfos[character] = {} end
+        modVars.Fallen_TmogInfos[GUID(character)][tostring(equipmentSlot)] = itemSkin.GameObjectVisual.RootTemplateId
+    end
     SyncModVariables()
 end
 
@@ -33,7 +39,7 @@ local function saveOriginalWeaponInfos(itemEntity)
 end
 ---Restores weapon item to its original state using store info
 ---@param itemEntity ItemEntity
-function RestoreOriginalWeaponVisuals(itemEntity)
+function RestoreOriginalWeaponVisuals(itemEntity,cleanVars)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
         local uuid = EntityToUuid(itemEntity)
         BasicDebug("Restoring item state for weapon : " .. uuid)
@@ -81,5 +87,20 @@ function TransmogWeapon(itemInUse, skin, character, fromVars)
         itemToReskin.GameObjectVisual.RootTemplateId = skin
         replicateWeaponComponents(itemToReskin)
         RefreshCharacterArmorVisuals(_GE(character))
+    end
+end
+
+
+---Return true if appearance is the invisible shit
+---@param slot EQUIPMENTSLOT
+---@param character GUIDSTRING
+---@return boolean
+function IsWeaponInvisible(slot,character)
+    local modVars = GetModVariables()
+    local weaponMogging =  modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[character]
+    if weaponMogging and weaponMogging[slot]==InvisibleShit then
+        return true
+    else
+        return false
     end
 end

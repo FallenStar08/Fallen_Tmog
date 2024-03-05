@@ -18,6 +18,8 @@ Handles = {
     ["Gloves_Description"] = "h95a0daafg3e8bg4127ga3b7gf2550fb5b414",
     ["Chest_Description"] = "h9adbd35agc653g4d85gb96dg2494ca4731a7",
     ["Cloak_Description"] = "h1f82547egb314g490dg89ddgecfaa929f680",
+    ["MeleeMainHand_Description"] ="h7b5dfe6fgad75g4a89g9020gecbebd3ffd1c",
+    ["MeleeOffHand_Description"] ="ha3cbd677gc7aag4a26g8f8fgc649d495bc24",
     ["Visible"] = "hc0011734gbfa1g4276g9f50gdc2c02c56832",
     ["Invisible"] = "h97fc23c6gf453g4950gb4f0gc5d9e44249f0"
 }
@@ -27,6 +29,8 @@ SlotToDescriptionHandle={
     ["Boots"] = "Boots_Description",
     ["Cloak"] = "Cloak_Description",
     ["Gloves"] = "Gloves_Description",
+    ["MeleeMainHand"] ="MeleeMainHand_Description",
+    ["MeleeOffHand"] ="MeleeOffHand_Description",
 }
 
 --Potion template to corresponding slot to hide
@@ -35,6 +39,8 @@ HideSlots = {
     ["549690dc-8fbd-43f2-87c2-673212535587"] = "Boots",
     ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "Cloak",
     ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "Gloves",
+    ["45e3e30c-75e0-452e-980d-6581f002a5af"] = "MeleeMainHand",
+    ["d573df23-4156-415d-abfb-6a14ca9c9402"] = "MeleeOffHand"
 }
 
 --Slot conversion for vanity
@@ -56,3 +62,5 @@ WeaponSlots = {
     ["RangedMainHand"] = "Ranged Main Weapon",
     ["RangedOffHand"] = "Ranged Offhand Weapon",
 }
+
+InvisibleShit = "7c7890a2-a135-409e-a92a-69629288485d"

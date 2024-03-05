@@ -4,48 +4,98 @@ local modItemRoots = {
     ["0f6e837f-203c-4d9c-90de-4cd7c63d7337"] = "PotionInvisBreast",
     ["549690dc-8fbd-43f2-87c2-673212535587"] = "potionInvisBoots",
     ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "potionInvisCloak",
-    ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "potionInvisGloves"
+    ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "potionInvisGloves",
+    ["45e3e30c-75e0-452e-980d-6581f002a5af"] = "potionInvisMainHand",
+    ["d573df23-4156-415d-abfb-6a14ca9c9402"] = "potionInvisOffHand"
 }
 
 ---Get Visibility status for each slot and update relevent loca entries
 local function updatePotionsDescription()
     local modVars = GetModVariables()
-    if not modVars.Fallen_TmogInfos_Invisibles then return end
-    local result = {}
-    local descriptionSlots = { "Breast", "Gloves", "Boots", "Cloak" }
-    local descriptionContent = {}
-    GetSquadies()
+    if modVars.Fallen_TmogInfos_Invisibles then
+        local result = {}
+        local descriptionSlots = { "Breast", "Gloves", "Boots", "Cloak" }
+        local descriptionContent = {}
+        GetSquadies()
 
-    --Get visibility information
-    for _, member in pairs(SQUADIES) do
-        local invisTmogInfos = modVars.Fallen_TmogInfos_Invisibles[member]
-        if invisTmogInfos then
-            for slot, visibility in pairs(invisTmogInfos) do
-                result[member] = result[member] or {}
-                result[member][slot] = visibility
+        --Get visibility information
+        for _, member in pairs(SQUADIES) do
+            local invisTmogInfos = modVars.Fallen_TmogInfos_Invisibles[member]
+            if invisTmogInfos then
+                for slot, visibility in pairs(invisTmogInfos) do
+                    result[member] = result[member] or {}
+                    result[member][slot] = visibility
+                end
             end
         end
-    end
 
-    -- Translated strings for visibility
-    local visibleText = GetTranslatedString(Handles["Visible"]) or "Visible"
-    local invisibleText = GetTranslatedString(Handles["Invisible"]) or "Invisible"
+        -- Translated strings for visibility
+        local visibleText = GetTranslatedString(Handles["Visible"]) or "Visible"
+        local invisibleText = GetTranslatedString(Handles["Invisible"]) or "Invisible"
 
-    local greenHex = "#00FF00"  -- Green
-    local orangeHex = "#FFA500" -- Orange
+        local greenHex = "#00FF00"  -- Green
+        local orangeHex = "#FFA500" -- Orange
 
-    -- Generate description content for each description slot
-    for _, slot in pairs(descriptionSlots) do
-        local slotDescriptionHandle = SlotToDescriptionHandle[slot]
-        descriptionContent[slot] = ""
-        for _, member in pairs(SQUADIES) do
-            local visibility = result[member] and result[member][slot]
-            local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or
-            ColorTranslatedString(visibleText, greenHex)
-            descriptionContent[slot] = descriptionContent[slot] ..
-            GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
+        -- Generate description content for each description slot
+        for _, slot in pairs(descriptionSlots) do
+            local slotDescriptionHandle = SlotToDescriptionHandle[slot]
+            descriptionContent[slot] = ""
+            for _, member in pairs(SQUADIES) do
+                local visibility = result[member] and result[member][slot]
+                local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or
+                    ColorTranslatedString(visibleText, greenHex)
+                descriptionContent[slot] = descriptionContent[slot] ..
+                    GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
+            end
+            UpdateTranslatedString(Handles[slotDescriptionHandle], descriptionContent[slot])
         end
-        UpdateTranslatedString(Handles[slotDescriptionHandle], descriptionContent[slot])
+
+        if modVars.Fallen_TmogInfos then
+            local WeaponResults = {}
+            local WeaponDescriptionSlots = { "MeleeMainHand", "MeleeOffHand" }
+            local WeaponDescriptionContent = {}
+            GetSquadies()
+
+            --Get visibility information
+            for _, member in pairs(SQUADIES) do
+                local invisWeaponTmogInfos = modVars.Fallen_TmogInfos[member]
+                if invisWeaponTmogInfos then
+                    for slot, skin in pairs(invisWeaponTmogInfos) do
+                        if WeaponSlots[slot] then
+                            WeaponResults[member] = WeaponResults[member] or {}
+                            WeaponResults[member][slot] = skin == InvisibleShit
+                            if WeaponResults[member][slot] == true then
+                                BasicPrint(slot.." Shit do be invisible")
+                                BasicDebug(WeaponResults)
+                            else
+                                BasicPrint(slot.." Shit do not be invisible")
+                            end
+                        end
+                    end
+                end
+            end
+
+            -- Translated strings for visibility
+            local visibleText = GetTranslatedString(Handles["Visible"]) or "Visible"
+            local invisibleText = GetTranslatedString(Handles["Invisible"]) or "Invisible"
+
+            local greenHex = "#00FF00"  -- Green
+            local orangeHex = "#FFA500" -- Orange
+
+            -- Generate description content for each description slot
+            for _, slot in pairs(WeaponDescriptionSlots) do
+                local slotDescriptionHandle = Handles[SlotToDescriptionHandle[slot]]
+                WeaponDescriptionContent[slot] = ""
+                for _, member in pairs(SQUADIES) do
+                    local visibility = WeaponResults[member] and WeaponResults[member][slot]
+                    local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or
+                        ColorTranslatedString(visibleText, greenHex)
+                    WeaponDescriptionContent[slot] = WeaponDescriptionContent[slot] ..
+                        GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
+                end
+                UpdateTranslatedString(slotDescriptionHandle, WeaponDescriptionContent[slot])
+            end
+        end
     end
 end
 
@@ -231,19 +281,41 @@ Ext.Osiris.RegisterListener("TemplateUseStarted", 3, "after", function(character
         character = GUID(character)
         local slotToHide = HideSlots[GUID(itemTemplate)]
         if slotToHide then
-            local correspondingEquipment = Osi.GetEquippedItem(character,
-                tostring(slotToHide))
-            if correspondingEquipment then
-                if Osi.HasActiveStatus(correspondingEquipment, FALLEN_BOOSTS[2]) == 0 and not IsArmorSlotInvisible(slotToHide, character) then
-                    Osi.ApplyStatus(correspondingEquipment, FALLEN_BOOSTS[2], -1, 100, "") --Invisible Items
-                    BasicDebug("Invisibled the thing!")
-                    SaveArmorInfosToModVars(NULLUUID, character, slotToHide)
-                    HideArmorPiece(correspondingEquipment, character)
-                else
-                    RestoreArmorVisibility(correspondingEquipment, slotToHide, character)
+            if ArmorSlots[slotToHide] then
+                --It's an armor
+                local correspondingEquipment = Osi.GetEquippedItem(character,
+                    tostring(slotToHide))
+                if correspondingEquipment then
+                    if Osi.HasActiveStatus(correspondingEquipment, FALLEN_BOOSTS[2]) == 0 and not IsArmorSlotInvisible(slotToHide, character) then
+                        Osi.ApplyStatus(correspondingEquipment, FALLEN_BOOSTS[2], -1, 100, "") --Invisible Items
+                        BasicDebug("Invisibled the thing!")
+                        SaveArmorInfosToModVars(NULLUUID, character, slotToHide)
+                        HideArmorPiece(correspondingEquipment, character)
+                    else
+                        RestoreArmorVisibility(correspondingEquipment, slotToHide, character)
+                    end
+                    updatePotionsDescription()
+                end
+            else
+                --It's a weapon
+                local correspondingEquipment = Osi.GetEquippedItem(character,
+                    tostring(WeaponSlots[slotToHide]))
+                if correspondingEquipment then
+                    if not IsWeaponInvisible(slotToHide, character) then
+                        --Osi.ApplyStatus(correspondingEquipment, FALLEN_BOOSTS[2], -1, 100, "") --Invisible Items
+                        BasicDebug("Invisibled the Weapon!")
+                        SaveWeaponInfosToModVars(InvisibleShit, character, slotToHide)
+                        TransmogWeapon(correspondingEquipment, InvisibleShit, character, true)
+                    else
+                        Osi.RemoveStatus(correspondingEquipment, FALLEN_BOOSTS[2])
+                        RestoreOriginalWeaponVisuals(_GE(correspondingEquipment))
+                        local modVars = GetModVariables()
+                        modVars.Fallen_TmogInfos[character][slotToHide] = nil
+                        RefreshCharacterArmorVisuals(_GE(character))
+                    end
+                    updatePotionsDescription()
                 end
             end
-            updatePotionsDescription()
         end
     end
 end)
@@ -274,8 +346,8 @@ local function uninstall()
         for uuid, item in pairs(result) do
             if Osi.IsContainer(uuid) == 1 then
                 BasicDebug("uninstall() - This is a container OwO we need to get stuff out of it just in case OwO")
-                local thingsToGetOut=DeepIterateInventory(_GE(uuid))
-                for thinguuid,_ in pairs(thingsToGetOut) do
+                local thingsToGetOut = DeepIterateInventory(_GE(uuid))
+                for thinguuid, _ in pairs(thingsToGetOut) do
                     Osi.TeleportTo(thinguuid, member)
                 end
                 DelayedCall(200, function() Osi.RequestDelete(uuid) end)

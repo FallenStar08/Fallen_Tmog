@@ -14,11 +14,15 @@
 	<content contentuid="h79952decgcd56g479bg8f1egae344378da03" version="1">Show Chest</content>
 	<content contentuid="ha7b915a2gf9b5g4675g9e5dge7fb4f1ac491" version="1">Hide Cloak Toggle</content>
 	<content contentuid="hcd2ff13eg0826g46b5g9003gde71425ee023" version="1">Show Cloak</content>
+	<content contentuid="heb368e69gc535g43e8gbe6ag4d2fb3a99299" version="1">Hide Melee Main Hand Toggle</content>
+	<content contentuid="h41fb5cbfg5625g4e3fg85a3g28e9a891f261" version="1">Hide Melee Off Hand Toggle</content>
 	<content contentuid="he4fdceeag5b97g4562g881fgba3cb46e761a" version="1">Invisible Equipment</content>
 	<content contentuid="h1dcc962ag45cag4e4eg8e65g2db6b14c7eb6" version="1">Boots Potion Description</content>
 	<content contentuid="h95a0daafg3e8bg4127ga3b7gf2550fb5b414" version="1">Gloves Potion Description</content>
 	<content contentuid="h9adbd35agc653g4d85gb96dg2494ca4731a7" version="1">Chest Potion Description</content>
 	<content contentuid="h1f82547egb314g490dg89ddgecfaa929f680" version="1">Cloak Potion Description</content>
+	<content contentuid="h7b5dfe6fgad75g4a89g9020gecbebd3ffd1c" version="1">Melee Main Hand Description</content>
+	<content contentuid="ha3cbd677gc7aag4a26g8f8fgc649d495bc24" version="1">Melee Off Hand Description</content>
 	<content contentuid="hc0011734gbfa1g4276g9f50gdc2c02c56832" version="1">visible</content>
 	<content contentuid="h97fc23c6gf453g4950gb4f0gc5d9e44249f0" version="1">invisible</content>
 	<content contentuid="h41996d3eg34a2g41e5gbbb6g3472820133c0" version="1">This bottle has a tendency to inadvertently capture the physical forms of various pieces of clothing. Consuming its content will return the items to their original state.</content>
