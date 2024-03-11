@@ -1,13 +1,3 @@
-local modItemRoots = {
-    ["ee9d149e-4558-4583-86f2-bd3dc01a034a"] = "armorBag",
-    ["7c515100-55f6-4dde-b46a-78099db32ace"] = "weaponBag",
-    ["0f6e837f-203c-4d9c-90de-4cd7c63d7337"] = "PotionInvisBreast",
-    ["549690dc-8fbd-43f2-87c2-673212535587"] = "potionInvisBoots",
-    ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "potionInvisCloak",
-    ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "potionInvisGloves",
-    ["45e3e30c-75e0-452e-980d-6581f002a5af"] = "potionInvisMainHand",
-    ["d573df23-4156-415d-abfb-6a14ca9c9402"] = "potionInvisOffHand"
-}
 
 ---Get Visibility status for each slot and update relevent loca entries
 local function updatePotionsDescription()
@@ -65,10 +55,10 @@ local function updatePotionsDescription()
                             WeaponResults[member] = WeaponResults[member] or {}
                             WeaponResults[member][slot] = skin == InvisibleShit
                             if WeaponResults[member][slot] == true then
-                                BasicPrint(slot.." Shit do be invisible")
+                                BasicDebug(slot.." Shit do be invisible")
                                 BasicDebug(WeaponResults)
                             else
-                                BasicPrint(slot.." Shit do not be invisible")
+                                BasicDebug(slot.." Shit do not be invisible")
                             end
                         end
                     end
@@ -102,7 +92,7 @@ end
 
 
 Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, inventoryHolder, addType)
-    if modItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "armorBag" then
+    if ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "armorBag" then
         Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") --Weightless item
         local bagEntity = _GE(inventoryHolder)
         if bagEntity then
@@ -126,7 +116,7 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                 end
             end
         end
-    elseif modItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
+    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
         Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") --Weightless item
         local bagEntity = _GE(inventoryHolder)
         if bagEntity then
@@ -155,7 +145,7 @@ end)
 
 Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryHolder)
     inventoryHolder = GUID(inventoryHolder)
-    if modItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "armorBag" then
+    if ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "armorBag" then
         Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) --Restore weight
         local bagEntity = _GE(inventoryHolder)
         if bagEntity then
@@ -183,7 +173,7 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
                 end
             end
         end
-    elseif modItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
+    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
         Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) --Restore weight
         local bagEntity = _GE(inventoryHolder)
         if bagEntity then
@@ -324,8 +314,8 @@ local function start()
     if not CONFIG then CONFIG = InitConfig() end
     RestoreMoggedWeapons()
     RestoreMoggedArmors()
-    for item, name in pairs(modItemRoots) do
-        GiveItemToEachPartyMember(item)
+    for item, name in pairs(ModItemRoots) do
+        GiveItemToEachPartyMember(item,true,"Fallen_TmogInfos_GivenItems")
     end
     updatePotionsDescription()
 end
@@ -335,27 +325,4 @@ Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", start)
 
 Ext.Events.ResetCompleted:Subscribe(start)
 
-local function uninstall()
-    BasicPrint("uninstall() - Deleting all mod items for the mod 'cosmetic slots'")
-    local itemsToDelete = {}
-    for item, _ in pairs(modItemRoots) do
-        itemsToDelete[#itemsToDelete + 1] = item
-    end
-    for _, member in pairs(GetEveryoneThatIsRelevant()) do
-        local result = DeepIterateInventory(_GE(member), { FilterByTemplate(itemsToDelete) })
-        for uuid, item in pairs(result) do
-            if Osi.IsContainer(uuid) == 1 then
-                BasicDebug("uninstall() - This is a container OwO we need to get stuff out of it just in case OwO")
-                local thingsToGetOut = DeepIterateInventory(_GE(uuid))
-                for thinguuid, _ in pairs(thingsToGetOut) do
-                    Osi.TeleportTo(thinguuid, member)
-                end
-                DelayedCall(200, function() Osi.RequestDelete(uuid) end)
-            else
-                Osi.RequestDelete(uuid)
-            end
-        end
-    end
-end
 
-Ext.RegisterConsoleCommand("fallen_uninstall_cslot", uninstall)

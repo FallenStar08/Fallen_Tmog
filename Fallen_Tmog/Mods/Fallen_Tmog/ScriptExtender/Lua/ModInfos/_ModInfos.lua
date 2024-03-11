@@ -12,6 +12,17 @@ RegisterModVariable("Fallen_TmogInfos")
 RegisterModVariable("Fallen_TmogInfos_GivenItems")
 RegisterModVariable("Fallen_TmogInfos_Invisibles")
 
+ModItemRoots = {
+    ["ee9d149e-4558-4583-86f2-bd3dc01a034a"] = "armorBag",
+    ["7c515100-55f6-4dde-b46a-78099db32ace"] = "weaponBag",
+    ["0f6e837f-203c-4d9c-90de-4cd7c63d7337"] = "PotionInvisBreast",
+    ["549690dc-8fbd-43f2-87c2-673212535587"] = "potionInvisBoots",
+    ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "potionInvisCloak",
+    ["4cea80d0-cda3-4eb8-b483-a70256877a19"] = "potionInvisGloves",
+    ["45e3e30c-75e0-452e-980d-6581f002a5af"] = "potionInvisMainHand",
+    ["d573df23-4156-415d-abfb-6a14ca9c9402"] = "potionInvisOffHand"
+}
+
 
 Handles = {
     ["Boots_Description"] = "h1dcc962ag45cag4e4eg8e65g2db6b14c7eb6",
