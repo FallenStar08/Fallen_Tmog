@@ -21,6 +21,25 @@ local function uninstall()
     end
 end
 
+local function nukeAllVars()
+    local modVars = GetModVariables()
+    for var,data in pairs(modVars) do
+        BasicPrint(var)
+        modVars[var]=nil
+    end
+    SyncModVariables()
+
+    local allEntities = Ext.Entity.GetAllEntitiesWithComponent("ServerItem")
+    for _,entity in pairs(allEntities) do
+        if entity.Vars then
+            for _,varName in pairs(UserVars) do
+                entity.Vars[varName]=nil
+            end
+            SyncUserVariables()
+        end
+    end
+end
+
 local function giveModItems()
     for key,item in pairs(ModItemRoots) do
         Osi.TemplateAddTo(item,Osi.GetHostCharacter(),1)
@@ -29,3 +48,4 @@ end
 
 Ext.RegisterConsoleCommand("fallen_uninstall_cslot", uninstall)
 Ext.RegisterConsoleCommand("fallen_give_cslot_items", giveModItems)
+Ext.RegisterConsoleCommand("fallen_nuke_cslot_vars", nukeAllVars)

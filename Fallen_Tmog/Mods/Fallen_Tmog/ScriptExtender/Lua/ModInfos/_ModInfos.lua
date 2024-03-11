@@ -3,14 +3,16 @@ local tmogConfig = {
     DEBUG_MESSAGES = 3,
 }
 
-MOD_INFO=ModInfo:new("Fall_Tmog","Fall_Tmog",true,tmogConfig)
+MOD_INFO=ModInfo:new("Fall_Tmog","Fall_Tmog",true,tmogConfig,UserVars,ModVars)
 
-RegisterUserVariable("Fallen_TmogArmorOriginalVisuals")
-RegisterUserVariable("Fallen_TmogArmorOriginalDye")
-RegisterUserVariable("Fallen_OriginalWeaponInfos")
-RegisterModVariable("Fallen_TmogInfos")
-RegisterModVariable("Fallen_TmogInfos_GivenItems")
-RegisterModVariable("Fallen_TmogInfos_Invisibles")
+
+UserVars={
+    "Fallen_TmogArmorOriginalVisuals","Fallen_TmogArmorOriginalDye","Fallen_OriginalWeaponInfos"
+}
+
+ModVars={
+    "Fallen_TmogInfos","Fallen_TmogInfos_GivenItems","Fallen_TmogInfos_Invisibles"
+}
 
 ModItemRoots = {
     ["ee9d149e-4558-4583-86f2-bd3dc01a034a"] = "armorBag",
