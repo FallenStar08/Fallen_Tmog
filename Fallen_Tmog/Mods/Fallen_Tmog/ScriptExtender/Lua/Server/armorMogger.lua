@@ -23,9 +23,10 @@ end
 ---Save original armor visuals inside the armor using info from a table
 ---@param armorEntity ItemEntity
 ---@param infoTable table
-function SaveOriginalArmorInfos(armorEntity, infoTable)
+---@param originalSlotInfos table
+function SaveOriginalArmorInfos(armorEntity, infoTable, originalSlotInfos)
     if armorEntity then
-        if armorEntity.Vars.Fallen_TmogArmorOriginalVisuals then
+        if armorEntity.Vars.Fallen_TmogArmorOriginalVisuals and armorEntity.Vars.Fallen_TmogArmorOriginalSlots then
             BasicDebug(string.format("Armor visual infos already saved for %s!",
                 GetTranslatedName(EntityToUuid(armorEntity) or "")))
             return
@@ -33,6 +34,7 @@ function SaveOriginalArmorInfos(armorEntity, infoTable)
         BasicDebug(string.format("Saved new original armor visual infos for armor %s!",
             GetTranslatedName(EntityToUuid(armorEntity) or "")))
         armorEntity.Vars.Fallen_TmogArmorOriginalVisuals = infoTable
+        armorEntity.Vars.Fallen_TmogArmorOriginalSlots = originalSlotInfos
         SyncUserVariables()
     end
 end
@@ -51,7 +53,7 @@ end
 ---@param armorEntity ItemEntity
 function RestoreOriginalArmorVisuals(armorEntity)
     restoreOriginalDyesForArmor(armorEntity)
-    ApplyVisualsFromTable(armorEntity, armorEntity.Vars.Fallen_TmogArmorOriginalVisuals)
+    ApplyVisualsFromTable(armorEntity, armorEntity.Vars.Fallen_TmogArmorOriginalVisuals,armorEntity.Vars.Fallen_TmogArmorOriginalSlots)
 end
 
 ---Handle the dyes stuff.
@@ -81,8 +83,9 @@ function TransmogArmorUltimateVersion(skin, equippedPiece, character)
     local skinEntity = _GE(skin)
     local equippedPieceEntity = _GE(equippedPiece)
     local originalInfos = Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template.Equipment.Visuals)
+    local originalSlotInfos = Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template.Equipment.Slot)
     HandleDyesForArmor(skinEntity, equippedPieceEntity)
-    SaveOriginalArmorInfos(equippedPieceEntity, originalInfos)
+    SaveOriginalArmorInfos(equippedPieceEntity, originalInfos, originalSlotInfos)
     CopyVisuals(equippedPieceEntity, skinEntity)
     RefreshCharacterArmorVisuals(_GE(character))
 end
@@ -94,7 +97,8 @@ function HideArmorPiece(equippedPiece, character)
             .Equipment.Visuals) end)
 
         if success then
-            SaveOriginalArmorInfos(equippedPieceEntity, originalInfos)
+            SaveOriginalArmorInfos(equippedPieceEntity, originalInfos, Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template
+            .Equipment.Slot))
             ClearVisuals(equippedPieceEntity)
             RefreshCharacterArmorVisuals(_GE(character))
         else
@@ -183,6 +187,7 @@ end
 ---@param entity ItemEntity
 function ClearVisuals(entity)
     entity.ServerItem.Template.Equipment.Visuals={}
+    entity.ServerItem.Template.Equipment.Slot={}
     -- for index, visuals in pairs(entity.ServerItem.Template.Equipment.Visuals) do
     --     entity.ServerItem.Template.Equipment.Visuals[index] = nil
     -- end
@@ -191,10 +196,16 @@ end
 ---Apply visuals from table
 ---@param entity ItemEntity
 ---@param table table
-function ApplyVisualsFromTable(entity, table)
+---@param slots table
+function ApplyVisualsFromTable(entity, table, slots)
     if table and entity then
         for index, subtable in pairs(table) do
             entity.ServerItem.Template.Equipment.Visuals[index] = Table.DeepCopy(subtable)
+        end
+    end
+    if slots and entity then
+        for index, slot in pairs(slots) do
+            entity.ServerItem.Template.Equipment.Slot[index] = slot
         end
     end
 end
@@ -222,19 +233,23 @@ function CopyVisuals(target, source)
         local targetEntity = _GE(target)
         local sourceEntity = _GE(source)
         local sourceVisuals = sourceEntity.ServerItem.Template.Equipment.Visuals
+        local sourceSlots = sourceEntity.ServerItem.Template.Equipment.Slot
         local serializedSourceVisualsCopy = Ext.Types.Serialize(sourceVisuals)
+        local serializedSourceSlotsCopy = Ext.Types.Serialize(sourceSlots)
         BasicDebug("serializedSourceVisualsCopy : ")
         BasicDebug(serializedSourceVisualsCopy)
         ClearVisuals(targetEntity)
         --Ext.Types.Unserialize(targetEntity.ServerItem.Template.Equipment.Visuals,serializedSourceVisualsCopy)
-        ApplyVisualsFromTable(targetEntity, serializedSourceVisualsCopy)
+        ApplyVisualsFromTable(targetEntity, serializedSourceVisualsCopy, serializedSourceSlotsCopy)
     else
+        local sourceSlots = source.ServerItem.Template.Equipment.Slot
+        local serializedSourceSlotsCopy = Ext.Types.Serialize(sourceSlots)
         local sourceVisuals = source.ServerItem.Template.Equipment.Visuals
         local serializedSourceVisualsCopy = Ext.Types.Serialize(sourceVisuals)
         BasicDebug("serializedSourceVisualsCopy : ")
         BasicDebug(serializedSourceVisualsCopy)
         ClearVisuals(target)
         --Ext.Types.Unserialize(target.ServerItem.Template.Equipment.Visuals,serializedSourceVisualsCopy)
-        ApplyVisualsFromTable(target, serializedSourceVisualsCopy)
+        ApplyVisualsFromTable(target, serializedSourceVisualsCopy,serializedSourceSlotsCopy)
     end
 end
