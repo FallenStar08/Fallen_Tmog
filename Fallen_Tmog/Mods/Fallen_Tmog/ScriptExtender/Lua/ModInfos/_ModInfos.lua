@@ -6,7 +6,7 @@ local tmogConfig = {
 MOD_INFO=ModInfo:new("Fall_Tmog","Fall_Tmog",true,tmogConfig)
 
 
---Todo register them from lists automatically from modinfo at some point
+--Todo register them from lists automatically from modinfo at some point (ok it doesnt work fuck that)
 UserVars={
     "Fallen_TmogArmorOriginalVisuals","Fallen_TmogArmorOriginalDye","Fallen_OriginalWeaponInfos","Fallen_TmogArmorOriginalSlots"
 }
@@ -15,7 +15,7 @@ ModVars={
     "Fallen_TmogInfos","Fallen_TmogInfos_GivenItems","Fallen_TmogInfos_Invisibles"
 }
 
-
+--This whole fucking mod needs to be rewritten holy fuck
 RegisterUserVariable("Fallen_TmogArmorOriginalVisuals")
 RegisterUserVariable("Fallen_TmogArmorOriginalSlots")
 RegisterUserVariable("Fallen_TmogArmorOriginalDye")

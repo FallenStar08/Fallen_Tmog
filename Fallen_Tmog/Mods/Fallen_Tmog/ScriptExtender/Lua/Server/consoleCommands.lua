@@ -8,7 +8,7 @@ local function uninstall()
         local result = DeepIterateInventory(_GE(member), { FilterByTemplate(itemsToDelete) })
         for uuid, item in pairs(result) do
             if Osi.IsContainer(uuid) == 1 then
-                BasicDebug("uninstall() - This is a container OwO we need to get stuff out of it just in case OwO")
+                BasicPrint("uninstall() - This is a container OwO we need to get stuff out of it just in case OwO")
                 local thingsToGetOut = DeepIterateInventory(_GE(uuid))
                 for thinguuid, _ in pairs(thingsToGetOut) do
                     Osi.TeleportTo(thinguuid, member)
@@ -19,9 +19,11 @@ local function uninstall()
             end
         end
     end
+    BasicPrint("uninstall() - Done OwO")
 end
 
 local function nukeAllVars()
+    BasicPrint("nukeAllVars() - Nuking all the damn vars the mod 'cosmetic slots'")
     local modVars = GetModVariables()
     for var,data in pairs(modVars) do
         BasicPrint(var)
@@ -38,12 +40,15 @@ local function nukeAllVars()
             SyncUserVariables()
         end
     end
+    BasicPrint("nukeAllVars() - Done OwO")
 end
 
 local function giveModItems()
+    BasicPrint("giveModItems() - Giving mod items for the mod 'cosmetic slots' to the selected character")
     for key,item in pairs(ModItemRoots) do
         Osi.TemplateAddTo(item,Osi.GetHostCharacter(),1)
     end
+    BasicPrint("giveModItems() - Done OwO")
 end
 
 Ext.RegisterConsoleCommand("fallen_uninstall_cslot", uninstall)
