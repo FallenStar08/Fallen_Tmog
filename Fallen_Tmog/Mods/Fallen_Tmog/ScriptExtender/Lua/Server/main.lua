@@ -116,6 +116,31 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                 end
             end
         end
+    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "campBag" then
+            Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") --Weightless item
+            local bagEntity = _GE(inventoryHolder)
+            if bagEntity then
+                local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
+                local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
+                local itemEntity = _GE(item)
+                if itemEntity and itemEntity.Equipable then
+                    local equipmentSlot = itemEntity.Equipable.Slot
+                    if bagOwnerUUID then
+                        if CampSlots[equipmentSlot] then
+                            equipmentSlot = CampSlots[equipmentSlot] --Convert real slot into camp slot
+                            BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
+                            local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
+                            --BasicPrint(Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot)))
+                            if correspondingEquipment then
+                                BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
+                                    GetTranslatedName(correspondingEquipment)))
+                                TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
+                            end
+                            SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
+                        end
+                    end
+                end
+            end
     elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
         Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") --Weightless item
         local bagEntity = _GE(inventoryHolder)
@@ -173,6 +198,34 @@ Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryH
                 end
             end
         end
+    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "campBag" then
+            Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) --Restore weight
+            local bagEntity = _GE(inventoryHolder)
+            if bagEntity then
+                local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
+                local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
+                local itemEntity = _GE(item)
+                if itemEntity and itemEntity.Equipable then
+                    local equipmentSlot = itemEntity.Equipable.Slot
+                    equipmentSlot = CampSlots[equipmentSlot] --Convert real slot into corrresponding vanity
+                    if bagOwnerUUID and CampSlots[equipmentSlot] then
+                        local modVars = GetModVariables()
+                        local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
+                            tostring(equipmentSlot))
+                        BasicDebug(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
+                            tostring(equipmentSlot)))
+                        local tmogInfos = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID]
+                        if (tmogInfos and tmogInfos[equipmentSlot] and GUID(item) == tmogInfos[equipmentSlot]) then
+                            if correspondingEquipment and not IsArmorSlotInvisible(equipmentSlot, bagOwnerUUID) then
+                                RestoreOriginalArmorVisuals(_GE(correspondingEquipment))
+                                RefreshCharacterArmorVisuals(_GE(bagOwnerUUID))
+                            end
+                            modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] = nil
+                            SyncModVariables()
+                        end
+                    end
+                end
+            end
     elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
         Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) --Restore weight
         local bagEntity = _GE(inventoryHolder)

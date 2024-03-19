@@ -27,6 +27,7 @@ RegisterModVariable("Fallen_TmogInfos_Invisibles")
 ModItemRoots = {
     ["ee9d149e-4558-4583-86f2-bd3dc01a034a"] = "armorBag",
     ["7c515100-55f6-4dde-b46a-78099db32ace"] = "weaponBag",
+    ["6af068b5-e306-44ac-8cdd-688d4206f0c0"] = "campBag",
     ["0f6e837f-203c-4d9c-90de-4cd7c63d7337"] = "PotionInvisBreast",
     ["549690dc-8fbd-43f2-87c2-673212535587"] = "potionInvisBoots",
     ["b35dc03b-2224-4943-b060-3759033c8c6e"] = "potionInvisCloak",
@@ -76,6 +77,14 @@ ArmorSlots = {
     ["Underwear"] = "Underwear",
     ["VanityBody"] = "Breast",
     ["VanityBoots"] = "Boots",
+}
+
+--Slot conversion for camp bag
+CampSlots = {
+    ["VanityBody"] = "VanityBody",
+    ["VanityBoots"] = "VanityBoots",
+    ["Breast"] = "VanityBody",
+    ["Boots"] = "VanityBoots"
 }
 
 --Slot type conversion

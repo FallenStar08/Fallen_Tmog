@@ -60,6 +60,18 @@
 					<attribute id="TechnicalDescription" type="TranslatedString" handle="hd4d53975gd560g4a36g9d74g0a10b563395a" version="1" />
 				</node>
 				<node id="GameObjects">
+					<attribute id="MapKey" type="FixedString" value="6af068b5-e306-44ac-8cdd-688d4206f0c0" />
+					<attribute id="Name" type="LSString" value="Fallen_Tmog_CampBagSlot" />
+					<attribute id="Type" type="FixedString" value="item" />
+					<attribute id="ParentTemplateId" type="FixedString" value="2e40240b-77d3-400b-bd6a-caff66a85833" />
+					<attribute id="Stats" type="FixedString" value="Fallen_Tmog_CampBagSlot" />
+					<attribute id="StoryItem" type="bool" value="True" />
+					<attribute id="Icon" type="FixedString" value="Fallen_ICON_Tmog_CampingBag" />
+					<attribute id="DisplayName" type="TranslatedString" handle="hca6e8efcg65e5g4e5eg99fag6dcb2a7eceba" version="1" />
+					<attribute id="Description" type="TranslatedString" handle="h3d34cea6gb885g4cc3g83ebg2cf861e16477" version="1" />
+					<attribute id="TechnicalDescription" type="TranslatedString" handle="h618be6b6g6988g42e7gbae1g4fbe5ac9092c" version="1" />
+				</node>
+				<node id="GameObjects">
 					<attribute id="Description" type="TranslatedString" handle="h41996d3eg34a2g41e5gbbb6g3472820133c0" version="1" />
 					<attribute id="TechnicalDescription" type="TranslatedString" handle="h95a0daafg3e8bg4127ga3b7gf2550fb5b414" version="1" />
 					<attribute id="DisplayName" type="TranslatedString" handle="hc07df2ffg66b5g4695gac70g8c0cecfb0928" version="1" />
