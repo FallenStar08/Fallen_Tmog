@@ -109,7 +109,7 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                         if correspondingEquipment and not IsArmorSlotInvisible(ArmorSlots[equipmentSlot], bagOwnerUUID) then
                             BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
                                 GetTranslatedName(correspondingEquipment)))
-                            TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
+                            TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                         end
                         SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
                     end
@@ -130,11 +130,10 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
                             equipmentSlot = CampSlots[equipmentSlot] --Convert real slot into camp slot
                             BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
                             local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
-                            --BasicPrint(Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot)))
                             if correspondingEquipment then
                                 BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
                                     GetTranslatedName(correspondingEquipment)))
-                                TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
+                                TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                             end
                             SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
                         end
@@ -272,7 +271,7 @@ Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
                 if IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character) then
                     HideArmorPiece(GUID(item), character)
                 else
-                    TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
+                    TransmogArmor(skinToApply, GUID(item), character)
                 end
             else
                 TransmogWeapon(item, skinToApply, character, true)

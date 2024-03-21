@@ -79,7 +79,7 @@ end
 ---@param skin GUIDSTRING
 ---@param equippedPiece GUIDSTRING
 ---@param character GUIDSTRING
-function TransmogArmorUltimateVersion(skin, equippedPiece, character)
+function TransmogArmor(skin, equippedPiece, character)
     local skinEntity = _GE(skin)
     local equippedPieceEntity = _GE(equippedPiece)
     local originalInfos = Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template.Equipment.Visuals)
@@ -122,7 +122,7 @@ function RestoreArmorVisibility(equippedPiece,slot,character)
             if correspondingEquipment then
                 BasicDebug(string.format("Restoring appearance for armor piece : %s for slot : %s",
                     correspondingEquipment or "", slot))
-                TransmogArmorUltimateVersion(data[character][slot], correspondingEquipment, character)
+                TransmogArmor(data[character][slot], correspondingEquipment, character)
                 RefreshCharacterArmorVisuals(_GE(character))
                 return
             end
@@ -147,7 +147,7 @@ function RestoreMoggedArmors()
                 if correspondingEquipment and not invisible then
                     BasicDebug(string.format("Restoring appearance for armor piece : %s for slot : %s",
                         correspondingEquipment or "", slot))
-                    TransmogArmorUltimateVersion(skin, correspondingEquipment, characterUUID)
+                    TransmogArmor(skin, correspondingEquipment, characterUUID)
                     RefreshCharacterArmorVisuals(_GE(characterUUID))
                 elseif correspondingEquipment then
                     BasicDebug(string.format("Hiding appearance for armor piece : %s for slot : %s",
