@@ -52,9 +52,13 @@ end
 ---Basically do a tmog with the original infos
 ---@param armorEntity ItemEntity
 function RestoreOriginalArmorVisuals(armorEntity)
+    local entityUUID = EntityToUuid(armorEntity)
+    local armorRT = GetRootTemplateData(entityUUID)
     restoreOriginalDyesForArmor(armorEntity)
-    ApplyVisualsFromTable(armorEntity, armorEntity.Vars.Fallen_TmogArmorOriginalVisuals,
-        armorEntity.Vars.Fallen_TmogArmorOriginalSlots)
+    if armorRT then
+        ApplyVisualsFromTable(armorRT, armorEntity.Vars.Fallen_TmogArmorOriginalVisuals,
+            armorEntity.Vars.Fallen_TmogArmorOriginalSlots)
+    end
 end
 
 ---Handle the dyes stuff.
@@ -83,8 +87,9 @@ end
 function TransmogArmor(skin, equippedPiece, character)
     local skinEntity = _GE(skin)
     local equippedPieceEntity = _GE(equippedPiece)
-    local equipmentVisuals = SafeGetField(equippedPieceEntity, "ServerItem.Template.Equipment.Visuals")
-    local equipmentSlot = SafeGetField(equippedPieceEntity, "ServerItem.Template.Equipment.Slot")
+    local equippedPieceRT = GetRootTemplateData(equippedPiece)
+    local equipmentVisuals = (equippedPieceRT and equippedPieceRT.Equipment) and equippedPieceRT.Equipment.Visuals
+    local equipmentSlot = (equippedPieceRT and equippedPieceRT.Equipment) and equippedPieceRT.Equipment.Slot
     local originalInfos = equipmentVisuals and Ext.Types.Serialize(equipmentVisuals)
     local originalSlotInfos = equipmentSlot and Ext.Types.Serialize(equipmentSlot)
     if originalInfos and originalSlotInfos then
@@ -97,17 +102,15 @@ end
 
 function HideArmorPiece(equippedPiece, character)
     local equippedPieceEntity = _GE(equippedPiece)
-    if equippedPieceEntity then
-        local success, originalInfos = pcall(function()
-            return Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template
-                .Equipment.Visuals)
-        end)
-
-        if success then
+    local equippedPieceRT = GetRootTemplateData(equippedPiece)
+    if equippedPieceEntity and equippedPieceRT then
+        local originalInfos = (equippedPieceRT and equippedPieceRT.Equipment) and
+        Ext.Types.Serialize(equippedPieceRT.Equipment.Visuals)
+        if originalInfos then
             SaveOriginalArmorInfos(equippedPieceEntity, originalInfos,
-                Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template
-                    .Equipment.Slot))
-            ClearVisuals(equippedPieceEntity)
+                Ext.Types.Serialize(equippedPieceRT.Equipment.Slot))
+            BasicDebug("Clearing Visuals")
+            ClearVisuals(equippedPieceRT)
             RefreshCharacterArmorVisuals(_GE(character))
         else
             -- An error occurred, handle it appropriately
@@ -190,28 +193,35 @@ function RefreshCharacterArmorVisuals(entity)
 end
 
 ---Clear existing armor visuals to prepare for copy
----@param entity ItemEntity
-function ClearVisuals(entity)
-    entity.ServerItem.Template.Equipment.Visuals = {}
-    entity.ServerItem.Template.Equipment.Slot = {}
+---@param RT GameObjectTemplate
+function ClearVisuals(RT)
+    BasicPrint(RT)
+    BasicPrint(RT.Id)
+    RT.Equipment.Visuals = {}
+    RT.Equipment.Slot = {}
+    -- entity.ServerItem.Template.Equipment.Visuals = {}
+    -- entity.ServerItem.Template.Equipment.Slot = {}
     -- for index, visuals in pairs(entity.ServerItem.Template.Equipment.Visuals) do
     --     entity.ServerItem.Template.Equipment.Visuals[index] = nil
     -- end
 end
 
 ---Apply visuals from table
----@param entity ItemEntity
+---@param RT GameObjectTemplate
 ---@param table table
 ---@param slots table
-function ApplyVisualsFromTable(entity, table, slots)
-    if table and entity then
+function ApplyVisualsFromTable(RT, table, slots)
+    if table and RT then
+        DFprint("ApplyVisualsFromTable() table and rt")
         for index, subtable in pairs(table) do
-            entity.ServerItem.Template.Equipment.Visuals[index] = Table.DeepCopy(subtable)
+            --RT.Equipment.Visuals[index] = Table.DeepCopy(subtable)
+            RT.Equipment.Visuals[index] = Table.DeepCopy(subtable)
         end
     end
-    if slots and entity then
+    if slots and RT then
+        DFprint("ApplyVisualsFromTable() slots and RT")
         for index, slot in pairs(slots) do
-            entity.ServerItem.Template.Equipment.Slot[index] = slot
+            RT.Equipment.Slot[index] = slot
         end
     end
 end
@@ -236,17 +246,23 @@ function CopyVisuals(target, source)
     local targetEntity = type(target) == "string" and _GE(target) or target
     local sourceEntity = type(source) == "string" and _GE(source) or source
     ---@cast targetEntity ItemEntity
+    ---@cast sourceEntity ItemEntity
 
     if targetEntity and sourceEntity then
-        local sourceVisuals = sourceEntity.ServerItem.Template.Equipment.Visuals
-        local sourceSlots = sourceEntity.ServerItem.Template.Equipment.Slot
+        -- local sourceVisuals = sourceEntity.ServerItem.Template.Equipment.Visuals
+        -- local sourceSlots = sourceEntity.ServerItem.Template.Equipment.Slot
+        local sourceUUID = EntityToUuid(sourceEntity)
+        local sourceRT = GetRootTemplateData(sourceUUID)
+        local targetUUID = EntityToUuid(targetEntity)
+        local targetRT = GetRootTemplateData(targetUUID)
+        local sourceVisuals = sourceRT and sourceRT.Equipment.Visuals
+        local sourceSlots = sourceRT and sourceRT.Equipment.Slot
 
-        if targetEntity.ServerItem and targetEntity.ServerItem.Template then
+        if targetEntity.ServerItem and targetEntity.ServerItem.Template and sourceVisuals and sourceSlots and targetRT then
             local serializedSourceVisualsCopy = Ext.Types.Serialize(sourceVisuals)
             local serializedSourceSlotsCopy = Ext.Types.Serialize(sourceSlots)
-
-            ClearVisuals(targetEntity)
-            ApplyVisualsFromTable(targetEntity, serializedSourceVisualsCopy, serializedSourceSlotsCopy)
+            ClearVisuals(targetRT)
+            ApplyVisualsFromTable(targetRT, serializedSourceVisualsCopy, serializedSourceSlotsCopy)
             BasicDebug("Serialized source visuals copy: ")
             BasicDebug(serializedSourceVisualsCopy)
         end
