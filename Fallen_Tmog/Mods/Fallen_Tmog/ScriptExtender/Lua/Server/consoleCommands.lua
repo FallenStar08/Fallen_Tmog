@@ -25,17 +25,17 @@ end
 local function nukeAllVars()
     BasicPrint("nukeAllVars() - Nuking all the damn vars the mod 'cosmetic slots'")
     local modVars = GetModVariables()
-    for var,data in pairs(modVars) do
+    for var, data in pairs(modVars) do
         BasicPrint(var)
-        modVars[var]=nil
+        modVars[var] = nil
     end
     SyncModVariables()
 
     local allEntities = Ext.Entity.GetAllEntitiesWithComponent("ServerItem")
-    for _,entity in pairs(allEntities) do
+    for _, entity in pairs(allEntities) do
         if entity.Vars then
-            for _,varName in pairs(UserVars) do
-                entity.Vars[varName]=nil
+            for _, varName in pairs(UserVars) do
+                entity.Vars[varName] = nil
             end
             SyncUserVariables()
         end
@@ -45,8 +45,8 @@ end
 
 local function giveModItems()
     BasicPrint("giveModItems() - Giving mod items for the mod 'cosmetic slots' to the selected character")
-    for key,item in pairs(ModItemRoots) do
-        Osi.TemplateAddTo(item,Osi.GetHostCharacter(),1)
+    for key, item in pairs(ModItemRoots) do
+        Osi.TemplateAddTo(key, Osi.GetHostCharacter(), 1)
     end
     BasicPrint("giveModItems() - Done OwO")
 end
