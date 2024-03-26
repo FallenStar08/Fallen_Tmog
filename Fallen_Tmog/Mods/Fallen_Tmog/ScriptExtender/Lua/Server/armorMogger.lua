@@ -83,12 +83,16 @@ end
 function TransmogArmor(skin, equippedPiece, character)
     local skinEntity = _GE(skin)
     local equippedPieceEntity = _GE(equippedPiece)
-    local originalInfos = Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template.Equipment.Visuals)
-    local originalSlotInfos = Ext.Types.Serialize(equippedPieceEntity.ServerItem.Template.Equipment.Slot)
-    HandleDyesForArmor(skinEntity, equippedPieceEntity)
-    SaveOriginalArmorInfos(equippedPieceEntity, originalInfos, originalSlotInfos)
-    CopyVisuals(equippedPieceEntity, skinEntity)
-    RefreshCharacterArmorVisuals(_GE(character))
+    local equipmentVisuals = SafeGetField(equippedPieceEntity, "ServerItem.Template.Equipment.Visuals")
+    local equipmentSlot = SafeGetField(equippedPieceEntity, "ServerItem.Template.Equipment.Slot")
+    local originalInfos = equipmentVisuals and Ext.Types.Serialize(equipmentVisuals)
+    local originalSlotInfos = equipmentSlot and Ext.Types.Serialize(equipmentSlot)
+    if originalInfos and originalSlotInfos then
+        HandleDyesForArmor(skinEntity, equippedPieceEntity)
+        SaveOriginalArmorInfos(equippedPieceEntity, originalInfos, originalSlotInfos)
+        CopyVisuals(equippedPieceEntity, skinEntity)
+        RefreshCharacterArmorVisuals(_GE(character))
+    end
 end
 
 function HideArmorPiece(equippedPiece, character)
