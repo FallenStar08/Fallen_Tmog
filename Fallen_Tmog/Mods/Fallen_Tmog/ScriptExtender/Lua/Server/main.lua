@@ -1,5 +1,4 @@
----Get Visibility status for each slot and update relevent loca entries
----Needs a fucking rewritelocal function updatePotionsDescription()
+---Update potion description with visibility infos
 local function updatePotionsDescription()
     local modVars = GetModVariables()
     if not modVars.Fallen_TmogInfos_Invisibles then return end
@@ -97,7 +96,7 @@ Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, 
     end
 end)
 
----Manage tmog logic for skin remove from bag
+---Manage tmog logic for skin removed from bag
 ---@param item GUIDSTRING
 ---@param inventoryHolder GUIDSTRING
 ---@param bagType bagtype
@@ -224,7 +223,7 @@ Ext.Osiris.RegisterListener("Combined", 7, "after", function(item1, item2, item3
 end)
 
 
---Hide appearance potions
+-- ------------------------------- Potions Use ------------------------------ --
 Ext.Osiris.RegisterListener("TemplateUseStarted", 3, "after", function(character, itemTemplate, item)
     if Osi.IsPartyMember(character, 1) == 1 then
         character = GUID(character)
@@ -269,6 +268,7 @@ Ext.Osiris.RegisterListener("TemplateUseStarted", 3, "after", function(character
     end
 end)
 
+-- -------------------------------- Technical ------------------------------- --
 local function start()
     if not CONFIG then CONFIG = InitConfig() end
     RestoreMoggedWeapons()
