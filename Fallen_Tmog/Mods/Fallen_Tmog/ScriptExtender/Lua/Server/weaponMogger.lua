@@ -12,15 +12,10 @@ end
 ---@param equipmentSlot EQUIPMENTSLOT
 function SaveWeaponInfosToModVars(itemSkin, character, equipmentSlot)
     local modVars = GetModVariables()
-    if type(itemSkin)=="string" then
-        if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos = {} end
-        if not modVars.Fallen_TmogInfos[character] then modVars.Fallen_TmogInfos[character] = {} end
-        modVars.Fallen_TmogInfos[GUID(character)][tostring(equipmentSlot)] = itemSkin
-    else
-        if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos = {} end
-        if not modVars.Fallen_TmogInfos[character] then modVars.Fallen_TmogInfos[character] = {} end
-        modVars.Fallen_TmogInfos[GUID(character)][tostring(equipmentSlot)] = itemSkin.GameObjectVisual.RootTemplateId
-    end
+    local skinId = type(itemSkin) == "string" and itemSkin or itemSkin.GameObjectVisual.RootTemplateId
+    if not modVars.Fallen_TmogInfos then modVars.Fallen_TmogInfos = {} end
+    if not modVars.Fallen_TmogInfos[character] then modVars.Fallen_TmogInfos[character] = {} end
+    modVars.Fallen_TmogInfos[GUID(character)][tostring(equipmentSlot)] = skinId
     SyncModVariables()
 end
 
@@ -37,9 +32,9 @@ local function saveOriginalWeaponInfos(itemEntity)
     BasicDebug("Saved state for weapon " .. EntityToUuid(itemEntity))
     BasicDebug(dataToSave)
 end
----Restores weapon item to its original state using store info
+---Restores weapon item to its original state using stored infos
 ---@param itemEntity ItemEntity
-function RestoreOriginalWeaponVisuals(itemEntity,cleanVars)
+function RestoreOriginalWeaponVisuals(itemEntity, cleanVars)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
         local uuid = EntityToUuid(itemEntity)
         BasicDebug("Restoring item state for weapon : " .. uuid)
@@ -72,33 +67,32 @@ end
 ---@param character GUIDSTRING
 ---@param fromVars? boolean
 function TransmogWeapon(itemInUse, skin, character, fromVars)
+    local itemToReskin = _GE(itemInUse)
+    if not itemToReskin then return end
+
     if not fromVars then
-        local itemToReskin = _GE(itemInUse)
         local itemSkin = _GE(skin)
-        if itemToReskin and itemSkin then
-            saveOriginalWeaponInfos(itemToReskin)
-            itemToReskin.GameObjectVisual.RootTemplateId = itemSkin.GameObjectVisual.RootTemplateId
-            replicateWeaponComponents(itemToReskin)
-            RefreshCharacterArmorVisuals(_GE(character))
-        end
+        if not itemSkin then return end
+
+        saveOriginalWeaponInfos(itemToReskin)
+        itemToReskin.GameObjectVisual.RootTemplateId = itemSkin.GameObjectVisual.RootTemplateId
     else
-        local itemToReskin = _GE(itemInUse)
         saveOriginalWeaponInfos(itemToReskin)
         itemToReskin.GameObjectVisual.RootTemplateId = skin
-        replicateWeaponComponents(itemToReskin)
-        RefreshCharacterArmorVisuals(_GE(character))
     end
-end
 
+    replicateWeaponComponents(itemToReskin)
+    RefreshCharacterArmorVisuals(_GE(character))
+end
 
 ---Return true if appearance is the invisible shit
 ---@param slot EQUIPMENTSLOT
 ---@param character GUIDSTRING
 ---@return boolean
-function IsWeaponInvisible(slot,character)
+function IsWeaponInvisible(slot, character)
     local modVars = GetModVariables()
-    local weaponMogging =  modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[character]
-    if weaponMogging and weaponMogging[slot]==InvisibleShit then
+    local weaponMogging = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[character]
+    if weaponMogging and weaponMogging[slot] == InvisibleShit then
         return true
     else
         return false
