@@ -1,256 +1,162 @@
-
 ---Get Visibility status for each slot and update relevent loca entries
+---Needs a fucking rewritelocal function updatePotionsDescription()
 local function updatePotionsDescription()
     local modVars = GetModVariables()
-    if modVars.Fallen_TmogInfos_Invisibles then
-        local result = {}
-        local descriptionSlots = { "Breast", "Gloves", "Boots", "Cloak" }
-        local descriptionContent = {}
-        GetSquadies()
+    if not modVars.Fallen_TmogInfos_Invisibles then return end
 
-        --Get visibility information
+    local descriptionSlots = { "Breast", "Gloves", "Boots", "Cloak" }
+    local visibleText = GetTranslatedString(Handles["Visible"]) or "Visible"
+    local invisibleText = GetTranslatedString(Handles["Invisible"]) or "Invisible"
+    local greenHex = "#00FF00"  -- Green
+    local orangeHex = "#FFA500" -- Orange
+
+    for _, slot in pairs(descriptionSlots) do
+        local slotDescriptionHandle = SlotToDescriptionHandle[slot]
+        local descriptionContent = ""
         for _, member in pairs(SQUADIES) do
             local invisTmogInfos = modVars.Fallen_TmogInfos_Invisibles[member]
-            if invisTmogInfos then
-                for slot, visibility in pairs(invisTmogInfos) do
-                    result[member] = result[member] or {}
-                    result[member][slot] = visibility
-                end
-            end
+            local visibility = invisTmogInfos and invisTmogInfos[slot] or false
+            local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or
+                ColorTranslatedString(visibleText, greenHex)
+            descriptionContent = descriptionContent ..
+                GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
         end
+        UpdateTranslatedString(Handles[slotDescriptionHandle], descriptionContent)
+    end
 
-        -- Translated strings for visibility
-        local visibleText = GetTranslatedString(Handles["Visible"]) or "Visible"
-        local invisibleText = GetTranslatedString(Handles["Invisible"]) or "Invisible"
+    if modVars.Fallen_TmogInfos then
+        local WeaponDescriptionSlots = { "MeleeMainHand", "MeleeOffHand" }
 
-        local greenHex = "#00FF00"  -- Green
-        local orangeHex = "#FFA500" -- Orange
-
-        -- Generate description content for each description slot
-        for _, slot in pairs(descriptionSlots) do
-            local slotDescriptionHandle = SlotToDescriptionHandle[slot]
-            descriptionContent[slot] = ""
-            for _, member in pairs(SQUADIES) do
-                local visibility = result[member] and result[member][slot]
-                local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or
-                    ColorTranslatedString(visibleText, greenHex)
-                descriptionContent[slot] = descriptionContent[slot] ..
-                    GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
-            end
-            UpdateTranslatedString(Handles[slotDescriptionHandle], descriptionContent[slot])
-        end
-
-        if modVars.Fallen_TmogInfos then
-            local WeaponResults = {}
-            local WeaponDescriptionSlots = { "MeleeMainHand", "MeleeOffHand" }
-            local WeaponDescriptionContent = {}
-            GetSquadies()
-
-            --Get visibility information
+        for _, slot in pairs(WeaponDescriptionSlots) do
+            local slotDescriptionHandle = Handles[SlotToDescriptionHandle[slot]]
+            local WeaponDescriptionContent = ""
             for _, member in pairs(SQUADIES) do
                 local invisWeaponTmogInfos = modVars.Fallen_TmogInfos[member]
-                if invisWeaponTmogInfos then
-                    for slot, skin in pairs(invisWeaponTmogInfos) do
-                        if WeaponSlots[slot] then
-                            WeaponResults[member] = WeaponResults[member] or {}
-                            WeaponResults[member][slot] = skin == InvisibleShit
-                            if WeaponResults[member][slot] == true then
-                                BasicDebug(slot.." Shit do be invisible")
-                                BasicDebug(WeaponResults)
-                            else
-                                BasicDebug(slot.." Shit do not be invisible")
-                            end
-                        end
-                    end
-                end
+                local visibility = invisWeaponTmogInfos and invisWeaponTmogInfos[slot] == InvisibleShit or false
+                local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or
+                    ColorTranslatedString(visibleText, greenHex)
+                WeaponDescriptionContent = WeaponDescriptionContent ..
+                    GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
             end
-
-            -- Translated strings for visibility
-            local visibleText = GetTranslatedString(Handles["Visible"]) or "Visible"
-            local invisibleText = GetTranslatedString(Handles["Invisible"]) or "Invisible"
-
-            local greenHex = "#00FF00"  -- Green
-            local orangeHex = "#FFA500" -- Orange
-
-            -- Generate description content for each description slot
-            for _, slot in pairs(WeaponDescriptionSlots) do
-                local slotDescriptionHandle = Handles[SlotToDescriptionHandle[slot]]
-                WeaponDescriptionContent[slot] = ""
-                for _, member in pairs(SQUADIES) do
-                    local visibility = WeaponResults[member] and WeaponResults[member][slot]
-                    local translatedVisibility = visibility and ColorTranslatedString(invisibleText, orangeHex) or
-                        ColorTranslatedString(visibleText, greenHex)
-                    WeaponDescriptionContent[slot] = WeaponDescriptionContent[slot] ..
-                        GetTranslatedName(member) .. " : " .. translatedVisibility .. "\n"
-                end
-                UpdateTranslatedString(slotDescriptionHandle, WeaponDescriptionContent[slot])
-            end
+            UpdateTranslatedString(slotDescriptionHandle, WeaponDescriptionContent)
         end
     end
 end
 
 
 
-Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, inventoryHolder, addType)
-    if ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "armorBag" then
-        Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") --Weightless item
-        local bagEntity = _GE(inventoryHolder)
-        if bagEntity then
-            local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
-            local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
-            local itemEntity = _GE(item)
-            if itemEntity and itemEntity.Equipable then
-                local equipmentSlot = itemEntity.Equipable.Slot
-                if bagOwnerUUID then
-                    if ArmorSlots[equipmentSlot] then
-                        equipmentSlot = ArmorSlots[equipmentSlot] --Convert Vanities into their corresponding real slots
-                        BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
-                        local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
-                        if correspondingEquipment and not IsArmorSlotInvisible(ArmorSlots[equipmentSlot], bagOwnerUUID) then
-                            BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
-                                GetTranslatedName(correspondingEquipment)))
-                            TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
-                        end
-                        SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
+
+---Manage tmog logic for skin added to bag
+---@param item GUIDSTRING
+---@param inventoryHolder GUIDSTRING
+---@param bagType bagtype
+---@param slotMappings table one of the slot mapping table
+local function ApplyTransmog(item, inventoryHolder, bagType, slotMappings)
+    Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") -- Weightless item
+    local bagEntity = _GE(inventoryHolder)
+    if bagEntity then
+        local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
+        local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
+        local itemEntity = _GE(item)
+        if itemEntity and itemEntity.Equipable then
+            local equipmentSlot = itemEntity.Equipable.Slot
+            if bagOwnerUUID and slotMappings[equipmentSlot] then
+                equipmentSlot = slotMappings[equipmentSlot]
+                if bagType == "weaponBag" then
+                    BasicDebug("Weapon Tmog for Slot : " .. tostring(equipmentSlot))
+                    local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
+                    if correspondingEquipment then
+                        BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
+                            GetTranslatedName(correspondingEquipment)))
+                        TransmogWeapon(correspondingEquipment, item, bagOwnerUUID)
                     end
-                end
-            end
-        end
-    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "campBag" then
-            Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") --Weightless item
-            local bagEntity = _GE(inventoryHolder)
-            if bagEntity then
-                local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
-                local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
-                local itemEntity = _GE(item)
-                if itemEntity and itemEntity.Equipable then
-                    local equipmentSlot = itemEntity.Equipable.Slot
-                    if bagOwnerUUID then
-                        if CampSlots[equipmentSlot] then
-                            equipmentSlot = CampSlots[equipmentSlot] --Convert real slot into camp slot
-                            BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
-                            local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
-                            --BasicPrint(Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot)))
-                            if correspondingEquipment then
-                                BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
-                                    GetTranslatedName(correspondingEquipment)))
-                                TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
-                            end
-                            SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
-                        end
+                    SaveWeaponInfosToModVars(itemEntity, GUID(bagOwnerUUID), equipmentSlot)
+                else
+                    BasicDebug("Armor Tmog for Slot : " .. tostring(equipmentSlot))
+                    local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
+                    if correspondingEquipment and not IsArmorSlotInvisible(slotMappings[equipmentSlot], bagOwnerUUID) then
+                        BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
+                            GetTranslatedName(correspondingEquipment)))
+                        TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                     end
-                end
-            end
-    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
-        Osi.ApplyStatus(item, FALLEN_BOOSTS[1], -1, 100, "") --Weightless item
-        local bagEntity = _GE(inventoryHolder)
-        if bagEntity then
-            local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
-            local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
-            local itemEntity = _GE(item)
-            if itemEntity and itemEntity.Equipable then
-                local equipmentSlot = itemEntity.Equipable.Slot
-                if bagOwnerUUID then
-                    if WeaponSlots[equipmentSlot] then
-                        BasicDebug("Weapon Tmog for Slot : " .. tostring(equipmentSlot))
-                        local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
-                            tostring(WeaponSlots[equipmentSlot]))
-                        if correspondingEquipment then
-                            BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
-                                GetTranslatedName(correspondingEquipment)))
-                            TransmogWeapon(correspondingEquipment, item, bagOwnerUUID)
-                        end
-                        SaveWeaponInfosToModVars(itemEntity, GUID(bagOwnerUUID), equipmentSlot)
-                    end
+                    SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
                 end
             end
         end
     end
+end
+
+Ext.Osiris.RegisterListener("TemplateAddedTo", 4, "after", function(root, item, inventoryHolder, addType)
+    local bagType = ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))]
+    if bagType == "armorBag" then
+        ApplyTransmog(item, inventoryHolder, bagType, ArmorSlots)
+    elseif bagType == "campBag" then
+        ApplyTransmog(item, inventoryHolder, bagType, CampSlots)
+    elseif bagType == "weaponBag" then
+        ApplyTransmog(item, inventoryHolder, bagType, WeaponSlots)
+    end
 end)
+
+---Manage tmog logic for skin remove from bag
+---@param item GUIDSTRING
+---@param inventoryHolder GUIDSTRING
+---@param bagType bagtype
+---@param slotMappings table one of the slot mapping table
+local function ApplyTransmogRemoval(item, inventoryHolder, bagType, slotMappings)
+    Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) -- Restore weight
+    local bagEntity = _GE(inventoryHolder)
+    if not bagEntity then return end
+
+    local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
+    local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
+    if not bagOwnerUUID then return end
+
+    local itemEntity = _GE(item)
+    if not (itemEntity and itemEntity.Equipable) then return end
+
+    local equipmentSlot = itemEntity.Equipable.Slot
+    local modVars = GetModVariables()
+    local correspondingEquipment
+
+    if bagType == "weaponBag" then
+        Osi.RemoveStatus(item, FALLEN_BOOSTS[1])
+        equipmentSlot = slotMappings[equipmentSlot]
+        correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
+        if correspondingEquipment then
+            BasicDebug("Removed Weapon from bag for Slot : " .. tostring(equipmentSlot))
+            BasicDebug("Restoring Equipped Piece's visuals")
+            RestoreOriginalWeaponVisuals(_GE(correspondingEquipment))
+            RefreshCharacterArmorVisuals(bagOwnerEntity)
+            modVars.Fallen_TmogInfos[GUID(bagOwnerUUID)][equipmentSlot] = nil
+        end
+    elseif slotMappings[equipmentSlot] then
+        Osi.RemoveStatus(item, FALLEN_BOOSTS[1])
+        equipmentSlot = slotMappings[equipmentSlot]
+        correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID, tostring(equipmentSlot))
+        if correspondingEquipment then
+            BasicDebug(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
+                tostring(equipmentSlot)))
+            local tmogInfos = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID]
+            if tmogInfos and tmogInfos[equipmentSlot] and GUID(item) == tmogInfos[equipmentSlot] then
+                if not IsArmorSlotInvisible(equipmentSlot, bagOwnerUUID) then
+                    RestoreOriginalArmorVisuals(_GE(correspondingEquipment))
+                    RefreshCharacterArmorVisuals(_GE(bagOwnerUUID))
+                end
+                modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] = nil
+            end
+        end
+    end
+end
 
 Ext.Osiris.RegisterListener("RemovedFrom", 2, "after", function(item, inventoryHolder)
     inventoryHolder = GUID(inventoryHolder)
-    if ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "armorBag" then
-        Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) --Restore weight
-        local bagEntity = _GE(inventoryHolder)
-        if bagEntity then
-            local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
-            local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
-            local itemEntity = _GE(item)
-            if itemEntity and itemEntity.Equipable then
-                local equipmentSlot = itemEntity.Equipable.Slot
-                equipmentSlot = ArmorSlots[equipmentSlot] --Convert Vanities into their corresponding real slots
-                if bagOwnerUUID and ArmorSlots[equipmentSlot] then
-                    local modVars = GetModVariables()
-                    local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
-                        tostring(equipmentSlot))
-                    BasicDebug(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
-                        tostring(equipmentSlot)))
-                    local tmogInfos = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID]
-                    if (tmogInfos and tmogInfos[equipmentSlot] and GUID(item) == tmogInfos[equipmentSlot]) then
-                        if correspondingEquipment and not IsArmorSlotInvisible(equipmentSlot, bagOwnerUUID) then
-                            RestoreOriginalArmorVisuals(_GE(correspondingEquipment))
-                            RefreshCharacterArmorVisuals(_GE(bagOwnerUUID))
-                        end
-                        modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] = nil
-                        SyncModVariables()
-                    end
-                end
-            end
-        end
-    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "campBag" then
-            Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) --Restore weight
-            local bagEntity = _GE(inventoryHolder)
-            if bagEntity then
-                local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
-                local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
-                local itemEntity = _GE(item)
-                if itemEntity and itemEntity.Equipable then
-                    local equipmentSlot = itemEntity.Equipable.Slot
-                    equipmentSlot = CampSlots[equipmentSlot] --Convert real slot into corrresponding vanity
-                    if bagOwnerUUID and CampSlots[equipmentSlot] then
-                        local modVars = GetModVariables()
-                        local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
-                            tostring(equipmentSlot))
-                        BasicDebug(string.format("Removed Armor : %s from bag for Slot : %s", GetTranslatedName(item),
-                            tostring(equipmentSlot)))
-                        local tmogInfos = modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[bagOwnerUUID]
-                        if (tmogInfos and tmogInfos[equipmentSlot] and GUID(item) == tmogInfos[equipmentSlot]) then
-                            if correspondingEquipment and not IsArmorSlotInvisible(equipmentSlot, bagOwnerUUID) then
-                                RestoreOriginalArmorVisuals(_GE(correspondingEquipment))
-                                RefreshCharacterArmorVisuals(_GE(bagOwnerUUID))
-                            end
-                            modVars.Fallen_TmogInfos[bagOwnerUUID][equipmentSlot] = nil
-                            SyncModVariables()
-                        end
-                    end
-                end
-            end
-    elseif ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))] == "weaponBag" then
-        Osi.RemoveStatus(item, FALLEN_BOOSTS[1]) --Restore weight
-        local bagEntity = _GE(inventoryHolder)
-        if bagEntity then
-            local bagOwnerEntity = bagEntity.OwneeCurrent.Ownee
-            local bagOwnerUUID = EntityToUuid(bagOwnerEntity)
-            local itemEntity = _GE(item)
-            if itemEntity and itemEntity.Equipable then
-                local equipmentSlot = itemEntity.Equipable.Slot
-                if bagOwnerUUID and WeaponSlots[equipmentSlot] then
-                    local modVars = GetModVariables()
-                    BasicDebug("Removed Weapon from bag for Slot : " .. tostring(equipmentSlot))
-                    local correspondingEquipment = Osi.GetEquippedItem(bagOwnerUUID,
-                        tostring(WeaponSlots[equipmentSlot]))
-                    if correspondingEquipment then
-                        BasicDebug("Restoring Equipped Piece's visuals")
-                        --TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
-                        RestoreOriginalWeaponVisuals(_GE(correspondingEquipment))
-                        RefreshCharacterArmorVisuals(bagOwnerEntity)
-                    end
-                    modVars.Fallen_TmogInfos[GUID(bagOwnerUUID)][equipmentSlot] = nil
-                    SyncModVariables()
-                end
-            end
-        end
+    local bagType = ModItemRoots[GUID(Osi.GetTemplate(inventoryHolder))]
+    if bagType == "weaponBag" then
+        ApplyTransmogRemoval(item, inventoryHolder, bagType, WeaponSlots)
+    elseif bagType == "armorBag" then
+        ApplyTransmogRemoval(item, inventoryHolder, bagType, ArmorSlots)
+    elseif bagType == "campBag" then
+        ApplyTransmogRemoval(item, inventoryHolder, bagType, CampSlots)
     end
 end)
 
@@ -368,7 +274,7 @@ local function start()
     RestoreMoggedWeapons()
     RestoreMoggedArmors()
     for item, name in pairs(ModItemRoots) do
-        GiveItemToEachPartyMember(item,true,"Fallen_TmogInfos_GivenItems")
+        GiveItemToEachPartyMember(item, true, "Fallen_TmogInfos_GivenItems")
     end
     updatePotionsDescription()
 end
@@ -378,4 +284,10 @@ Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", start)
 
 Ext.Events.ResetCompleted:Subscribe(start)
 
-
+---Should've done this from the start
+Ext.Events.GameStateChanged:Subscribe(function(e)
+    if e.FromState == "Running" and e.ToState == "Save" then
+        SyncModVariables()
+        SyncUserVariables()
+    end
+end)

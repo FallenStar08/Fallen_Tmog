@@ -1,18 +1,22 @@
+---@alias bagtype string |"campBag"|"armorBag"|"weaponBag"
+
+
 local tmogConfig = {
     MOD_ENABLED = 1,
     DEBUG_MESSAGES = 3,
 }
 
-MOD_INFO=ModInfo:new("Fall_Tmog","Fall_Tmog",true,tmogConfig)
+MOD_INFO = ModInfo:new("Fall_Tmog", "Fall_Tmog", true, tmogConfig)
 
 
 --Todo register them from lists automatically from modinfo at some point (ok it doesnt work fuck that)
-UserVars={
-    "Fallen_TmogArmorOriginalVisuals","Fallen_TmogArmorOriginalDye","Fallen_OriginalWeaponInfos","Fallen_TmogArmorOriginalSlots"
+UserVars = {
+    "Fallen_TmogArmorOriginalVisuals", "Fallen_TmogArmorOriginalDye", "Fallen_OriginalWeaponInfos",
+    "Fallen_TmogArmorOriginalSlots"
 }
 
-ModVars={
-    "Fallen_TmogInfos","Fallen_TmogInfos_GivenItems","Fallen_TmogInfos_Invisibles"
+ModVars = {
+    "Fallen_TmogInfos", "Fallen_TmogInfos_GivenItems", "Fallen_TmogInfos_Invisibles"
 }
 
 --This whole fucking mod needs to be rewritten holy fuck
@@ -42,19 +46,19 @@ Handles = {
     ["Gloves_Description"] = "h95a0daafg3e8bg4127ga3b7gf2550fb5b414",
     ["Chest_Description"] = "h9adbd35agc653g4d85gb96dg2494ca4731a7",
     ["Cloak_Description"] = "h1f82547egb314g490dg89ddgecfaa929f680",
-    ["MeleeMainHand_Description"] ="h7b5dfe6fgad75g4a89g9020gecbebd3ffd1c",
-    ["MeleeOffHand_Description"] ="ha3cbd677gc7aag4a26g8f8fgc649d495bc24",
+    ["MeleeMainHand_Description"] = "h7b5dfe6fgad75g4a89g9020gecbebd3ffd1c",
+    ["MeleeOffHand_Description"] = "ha3cbd677gc7aag4a26g8f8fgc649d495bc24",
     ["Visible"] = "hc0011734gbfa1g4276g9f50gdc2c02c56832",
     ["Invisible"] = "h97fc23c6gf453g4950gb4f0gc5d9e44249f0"
 }
 
-SlotToDescriptionHandle={
+SlotToDescriptionHandle = {
     ["Breast"] = "Chest_Description",
     ["Boots"] = "Boots_Description",
     ["Cloak"] = "Cloak_Description",
     ["Gloves"] = "Gloves_Description",
-    ["MeleeMainHand"] ="MeleeMainHand_Description",
-    ["MeleeOffHand"] ="MeleeOffHand_Description",
+    ["MeleeMainHand"] = "MeleeMainHand_Description",
+    ["MeleeOffHand"] = "MeleeOffHand_Description",
 }
 
 --Potion template to corresponding slot to hide
