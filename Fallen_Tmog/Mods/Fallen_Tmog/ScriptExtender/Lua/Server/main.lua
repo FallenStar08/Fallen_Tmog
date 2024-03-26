@@ -77,7 +77,7 @@ local function ApplyTransmog(item, inventoryHolder, bagType, slotMappings)
                     if correspondingEquipment and not IsArmorSlotInvisible(slotMappings[equipmentSlot], bagOwnerUUID) then
                         BasicDebug(string.format("Applying the skin of : %s on item : %s", GetTranslatedName(item),
                             GetTranslatedName(correspondingEquipment)))
-                        TransmogArmorUltimateVersion(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
+                        TransmogArmor(GUID(item), GUID(correspondingEquipment), bagOwnerUUID)
                     end
                     SaveArmorInfosToModVars(GUID(item), bagOwnerUUID, equipmentSlot)
                 end
@@ -178,7 +178,7 @@ Ext.Osiris.RegisterListener("Equipped", 2, "before", function(item, character)
                 if IsArmorSlotInvisible(ArmorSlots[equipmentSlot], character) then
                     HideArmorPiece(GUID(item), character)
                 else
-                    TransmogArmorUltimateVersion(skinToApply, GUID(item), character)
+                    TransmogArmor(skinToApply, GUID(item), character)
                 end
             else
                 TransmogWeapon(item, skinToApply, character, true)
