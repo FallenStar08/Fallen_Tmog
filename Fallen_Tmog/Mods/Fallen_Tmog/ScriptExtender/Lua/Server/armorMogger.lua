@@ -105,7 +105,7 @@ function HideArmorPiece(equippedPiece, character)
     local equippedPieceRT = GetRootTemplateData(equippedPiece)
     if equippedPieceEntity and equippedPieceRT then
         local originalInfos = (equippedPieceRT and equippedPieceRT.Equipment) and
-        Ext.Types.Serialize(equippedPieceRT.Equipment.Visuals)
+            Ext.Types.Serialize(equippedPieceRT.Equipment.Visuals)
         if originalInfos then
             SaveOriginalArmorInfos(equippedPieceEntity, originalInfos,
                 Ext.Types.Serialize(equippedPieceRT.Equipment.Slot))
@@ -195,8 +195,6 @@ end
 ---Clear existing armor visuals to prepare for copy
 ---@param RT GameObjectTemplate
 function ClearVisuals(RT)
-    BasicPrint(RT)
-    BasicPrint(RT.Id)
     RT.Equipment.Visuals = {}
     RT.Equipment.Slot = {}
     -- entity.ServerItem.Template.Equipment.Visuals = {}
@@ -212,14 +210,12 @@ end
 ---@param slots table
 function ApplyVisualsFromTable(RT, table, slots)
     if table and RT then
-        DFprint("ApplyVisualsFromTable() table and rt")
         for index, subtable in pairs(table) do
             --RT.Equipment.Visuals[index] = Table.DeepCopy(subtable)
             RT.Equipment.Visuals[index] = Table.DeepCopy(subtable)
         end
     end
     if slots and RT then
-        DFprint("ApplyVisualsFromTable() slots and RT")
         for index, slot in pairs(slots) do
             RT.Equipment.Slot[index] = slot
         end
