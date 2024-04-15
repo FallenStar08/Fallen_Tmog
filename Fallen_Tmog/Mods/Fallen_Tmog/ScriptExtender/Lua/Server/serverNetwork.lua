@@ -31,3 +31,8 @@ Ext.RegisterNetListener(CHANNELS["tmog"], function(_, payload)
         TransmogArmorNetwork(skinRT, equippedItemRT)
     end
 end)
+
+-- Ext.RegisterNetListener(CHANNELS["osiSlot"], function(_, payload)
+--     local templateId = payload.Id
+--     Ext.Net.BroadcastMessage(CHANNELS["osiSlot"], payload)
+-- end)

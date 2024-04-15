@@ -20,3 +20,7 @@ end)
 function SendTmogRequest(id, slot, character)
     Ext.Net.PostMessageToServer(CHANNELS["tmog"], JSON.Stringify({ Id = id, Slot = slot, Character = character }))
 end
+
+function SendSlotRequest(id)
+    Ext.Net.PostMessageToServer(CHANNELS["osiSlot"], JSON.Stringify({ Id = id, Slot = slot, Character = character }))
+end

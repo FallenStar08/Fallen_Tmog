@@ -28,8 +28,13 @@ function GetAllRTsInfos()
         local slots = SafeGetField(RT, "Equipment.Slot")
         local name = Ext.Loca.GetTranslatedString(SafeGetField(RT, "DisplayName.Handle.Handle") or "")
         if visuals and slots and next(Ext.Types.Serialize(slots)) and type == "item" and not StringEmpty(name) then
+            local realSlots = {}
+            for _, slotEntry in pairs(slots) do
+                local newThingy = tostring(slotEntry)
+                table.insert(realSlots, newThingy)
+            end
             ClientGlobals["Armors"] = ClientGlobals["Armors"] or {}
-            ClientGlobals["Armors"][templateID] = { ["visuals"] = visuals, ["slots"] = slots, ["name"] = name }
+            ClientGlobals["Armors"][templateID] = { ["slots"] = realSlots, ["name"] = name }
         end
     end
 
@@ -46,7 +51,7 @@ end
 function FindRTbyName(rtName)
     for id, entry in pairs(ClientGlobals["Armors"]) do
         if entry.name == rtName then
-            return id, entry.slot
+            return id
         end
     end
 end
@@ -80,10 +85,15 @@ function CreateTmogMenu(tab)
     -- ------------------------------ APPLY BUTTON ------------------------------ --
     local applyButton = tab:AddButton("applySkin")
     applyButton.SameLine = true
+
+    skinSelection.OnChange = function()
+        local skinIndex = skinSelection.SelectedIndex + 1
+        local id = FindRTbyName(skinSelection.Options[skinIndex])
+        
+    end
     applyButton.OnClick = function()
         local skinIndex = skinSelection.SelectedIndex + 1
-        local id, slot = FindRTbyName(skinSelection.Options[skinIndex])
-        _D(slot)
+        local id = FindRTbyName(skinSelection.Options[skinIndex])
         local slotIndex = slotSelection.SelectedIndex + 1
         SendTmogRequest(id, slotSelection.Options[slotIndex], ClientGlobals["SelectedCharacter"])
     end
