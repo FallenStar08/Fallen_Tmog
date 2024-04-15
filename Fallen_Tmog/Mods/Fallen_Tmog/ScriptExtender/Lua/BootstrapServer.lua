@@ -1,6 +1,8 @@
 Ext.Require("Shared/_Init.lua")
+Ext.Require("SharedNetwork/sharedNetwork.lua")
 Ext.Require("ModInfos/_ModInfos.lua")
 Ext.Require("Server/armorMogger.lua")
 Ext.Require("Server/weaponMogger.lua")
 Ext.Require("Server/consoleCommands.lua")
+Ext.Require("Server/serverNetwork.lua")
 Ext.Require("Server/main.lua")

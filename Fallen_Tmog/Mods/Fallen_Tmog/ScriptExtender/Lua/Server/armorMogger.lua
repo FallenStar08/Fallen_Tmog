@@ -84,7 +84,7 @@ end
 ---@param skin GUIDSTRING
 ---@param equippedPiece GUIDSTRING
 ---@param character GUIDSTRING
-function TransmogArmor(skin, equippedPiece, character)
+function TransmogArmor(skin, equippedPiece, character, templateOnly)
     local skinEntity = _GE(skin)
     local equippedPieceEntity = _GE(equippedPiece)
     local equippedPieceRT = GetRootTemplateData(equippedPiece)
@@ -98,6 +98,19 @@ function TransmogArmor(skin, equippedPiece, character)
         CopyVisuals(equippedPieceEntity, skinEntity)
         RefreshCharacterArmorVisuals(_GE(character))
     end
+end
+
+---comment
+---@param skin GUIDSTRING
+---@param equippedPiece GUIDSTRING
+---@param character? GUIDSTRING
+function TransmogArmorNetwork(skin, equippedPiece, character)
+    local equippedPieceRT = Template.GetRootTemplate(equippedPiece)
+    local equipmentSlot = (equippedPieceRT and equippedPieceRT.Equipment) and equippedPieceRT.Equipment.Slot
+    local equipmentVisuals = (equippedPieceRT and equippedPieceRT.Equipment) and equippedPieceRT.Equipment.Visuals
+    local skinRT = Template.GetRootTemplate(skin)
+    CopyVisualsNetwork(equippedPieceRT, skinRT)
+    RefreshCharacterArmorVisuals(_GE(character or Osi.GetHostCharacter()))
 end
 
 function HideArmorPiece(equippedPiece, character)
@@ -265,4 +278,14 @@ function CopyVisuals(target, source)
     end
 end
 
---dev
+---comment
+---@param targetRT GameObjectTemplate
+---@param sourceRT GameObjectTemplate
+function CopyVisualsNetwork(targetRT, sourceRT)
+    local sourceVisuals = sourceRT and sourceRT.Equipment.Visuals
+    local sourceSlots = sourceRT and sourceRT.Equipment.Slot
+    local serializedSourceVisualsCopy = Ext.Types.Serialize(sourceVisuals)
+    local serializedSourceSlotsCopy = Ext.Types.Serialize(sourceSlots)
+    ClearVisuals(targetRT)
+    ApplyVisualsFromTable(targetRT, serializedSourceVisualsCopy, serializedSourceSlotsCopy)
+end
