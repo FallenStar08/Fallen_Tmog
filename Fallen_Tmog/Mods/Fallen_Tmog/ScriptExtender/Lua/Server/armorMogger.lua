@@ -72,7 +72,7 @@ function HandleDyesForArmor(skinEntity, equippedPieceEntity)
     else
         equippedPieceEntity:CreateComponent("ItemDye")
     end
-    if skinEntity.ItemDye then
+    if skinEntity and skinEntity.ItemDye then
         local skinDye = skinEntity.ItemDye.Color
         equippedPieceEntity.ItemDye.Color = skinDye
         equippedPieceEntity:Replicate("ItemDye")
