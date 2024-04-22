@@ -21,7 +21,7 @@ function SaveArmorInfosToModVars(armor, character, equipmentSlot)
 end
 
 ---Save original armor visuals inside the armor using info from a table
----@param armorEntity ItemEntity
+---@param armorEntity ItemEntity?
 ---@param infoTable table
 ---@param originalSlotInfos table
 function SaveOriginalArmorInfos(armorEntity, infoTable, originalSlotInfos)
@@ -50,32 +50,36 @@ local function restoreOriginalDyesForArmor(armorEntity)
 end
 
 ---Basically do a tmog with the original infos
----@param armorEntity ItemEntity
+---@param armorEntity ItemEntity?
 function RestoreOriginalArmorVisuals(armorEntity)
-    local entityUUID = EntityToUuid(armorEntity)
-    local armorRT = GetRootTemplateData(entityUUID)
-    restoreOriginalDyesForArmor(armorEntity)
-    if armorRT then
-        ApplyVisualsFromTable(armorRT, armorEntity.Vars.Fallen_TmogArmorOriginalVisuals,
-            armorEntity.Vars.Fallen_TmogArmorOriginalSlots)
+    if armorEntity then
+        local entityUUID = EntityToUuid(armorEntity)
+        local armorRT = GetRootTemplateData(entityUUID)
+        restoreOriginalDyesForArmor(armorEntity)
+        if armorRT then
+            ApplyVisualsFromTable(armorRT, armorEntity.Vars.Fallen_TmogArmorOriginalVisuals,
+                armorEntity.Vars.Fallen_TmogArmorOriginalSlots)
+        end
     end
 end
 
 ---Handle the dyes stuff.
----@param skinEntity ItemEntity
----@param equippedPieceEntity ItemEntity
+---@param skinEntity ItemEntity?
+---@param equippedPieceEntity ItemEntity?
 function HandleDyesForArmor(skinEntity, equippedPieceEntity)
-    if equippedPieceEntity.ItemDye then
-        local equippedPieceDye = equippedPieceEntity.ItemDye.Color
-        --Save original dye
-        equippedPieceEntity.Vars.Fallen_TmogArmorOriginalDye = equippedPieceDye
-    else
-        equippedPieceEntity:CreateComponent("ItemDye")
-    end
-    if skinEntity and skinEntity.ItemDye then
-        local skinDye = skinEntity.ItemDye.Color
-        equippedPieceEntity.ItemDye.Color = skinDye
-        equippedPieceEntity:Replicate("ItemDye")
+    if equippedPieceEntity then
+        if equippedPieceEntity.ItemDye then
+            local equippedPieceDye = equippedPieceEntity.ItemDye.Color
+            --Save original dye
+            equippedPieceEntity.Vars.Fallen_TmogArmorOriginalDye = equippedPieceDye
+        else
+            equippedPieceEntity:CreateComponent("ItemDye")
+        end
+        if skinEntity and skinEntity.ItemDye then
+            local skinDye = skinEntity.ItemDye.Color
+            equippedPieceEntity.ItemDye.Color = skinDye
+            equippedPieceEntity:Replicate("ItemDye")
+        end
     end
     SyncUserVariables()
 end
@@ -184,12 +188,14 @@ function RestoreMoggedArmors()
 end
 
 ---Replicate ArmorSetsState to trigger a refresh of the armor visuals
----@param entity CharacterEntity
+---@param entity CharacterEntity?
 function RefreshCharacterArmorVisuals(entity)
-    if not entity.ArmorSetState then
-        entity:CreateComponent("ArmorSetState")
+    if entity then
+        if not entity.ArmorSetState then
+            entity:CreateComponent("ArmorSetState")
+        end
+        entity:Replicate("ArmorSetState")
     end
-    entity:Replicate("ArmorSetState")
 end
 
 ---Clear existing armor visuals to prepare for copy
@@ -236,9 +242,10 @@ function IsArmorSlotInvisible(slot, character)
 end
 
 --- Copy visuals from armor source to target
----@param target GUIDSTRING|ItemEntity
----@param source GUIDSTRING|ItemEntity
+---@param target GUIDSTRING|ItemEntity?
+---@param source GUIDSTRING|ItemEntity?
 function CopyVisuals(target, source)
+    if not target and not source then return end
     local targetEntity = type(target) == "string" and _GE(target) or target
     local sourceEntity = type(source) == "string" and _GE(source) or source
     ---@cast targetEntity ItemEntity

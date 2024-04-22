@@ -124,6 +124,7 @@ local function ApplyTransmogRemoval(item, inventoryHolder, bagType, slotMappings
         if correspondingEquipment then
             BasicDebug("Removed Weapon from bag for Slot : " .. tostring(equipmentSlot))
             BasicDebug("Restoring Equipped Piece's visuals")
+            local correspondingEquipmentEntity
             RestoreOriginalWeaponVisuals(_GE(correspondingEquipment))
             RefreshCharacterArmorVisuals(bagOwnerEntity)
             modVars.Fallen_TmogInfos[GUID(bagOwnerUUID)][equipmentSlot] = nil
@@ -190,11 +191,11 @@ end)
 
 Ext.Osiris.RegisterListener("Unequipped", 2, "before", function(item, character)
     local itemEntity = _GE(item)
-    if itemEntity.Vars.Fallen_OriginalWeaponInfos then
+    if itemEntity and itemEntity.Vars.Fallen_OriginalWeaponInfos then
         BasicDebug("Unequip restoring original weapon visuals")
         RestoreOriginalWeaponVisuals(itemEntity)
         RefreshCharacterArmorVisuals(_GE(character))
-    elseif itemEntity.Vars.Fallen_TmogArmorOriginalVisuals then
+    elseif itemEntity and itemEntity.Vars.Fallen_TmogArmorOriginalVisuals then
         BasicDebug("Unequip restoring original armor visuals")
         RestoreOriginalArmorVisuals(itemEntity)
         RefreshCharacterArmorVisuals(_GE(character))
@@ -207,7 +208,7 @@ Ext.Osiris.RegisterListener("Combined", 7, "after", function(item1, item2, item3
     local modVars = GetModVariables()
     if modVars.Fallen_TmogInfos and modVars.Fallen_TmogInfos[GUID(character)] then
         local skinEntity = _GE(newItem)
-        local equipmentSlot = skinEntity.Equipable.Slot
+        local equipmentSlot = skinEntity and skinEntity.Equipable.Slot
         equipmentSlot = ArmorSlots[equipmentSlot]
         local itemInfo = modVars.Fallen_TmogInfos[GUID(character)][equipmentSlot]
         if itemInfo == GUID(newItem) then

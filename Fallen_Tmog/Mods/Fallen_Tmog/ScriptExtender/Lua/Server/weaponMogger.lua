@@ -33,9 +33,9 @@ local function saveOriginalWeaponInfos(itemEntity)
     BasicDebug(dataToSave)
 end
 ---Restores weapon item to its original state using stored infos
----@param itemEntity ItemEntity
+---@param itemEntity ItemEntity?
 function RestoreOriginalWeaponVisuals(itemEntity, cleanVars)
-    if itemEntity.Vars.Fallen_OriginalWeaponInfos then
+    if itemEntity and itemEntity.Vars.Fallen_OriginalWeaponInfos then
         local uuid = EntityToUuid(itemEntity)
         BasicDebug("Restoring item state for weapon : " .. uuid)
         itemEntity.GameObjectVisual.RootTemplateId = itemEntity.Vars.Fallen_OriginalWeaponInfos.OriginalVisualId
