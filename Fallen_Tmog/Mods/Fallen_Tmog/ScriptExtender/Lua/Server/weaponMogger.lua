@@ -2,12 +2,12 @@
 --                                 WEAPON TMOG                                --
 -- -------------------------------------------------------------------------- --
 ---Stuff to replicate on weapons
----@param itemEntity ItemEntity
+---@param itemEntity EntityHandle
 local function replicateWeaponComponents(itemEntity)
     itemEntity:Replicate("GameObjectVisual")
 end
 
----@param itemSkin ItemEntity|GUIDSTRING
+---@param itemSkin EntityHandle|GUIDSTRING
 ---@param character GUIDSTRING
 ---@param equipmentSlot EQUIPMENTSLOT
 function SaveWeaponInfosToModVars(itemSkin, character, equipmentSlot)
@@ -20,7 +20,7 @@ function SaveWeaponInfosToModVars(itemSkin, character, equipmentSlot)
 end
 
 ---Save original weapon info for restoring inside the weapon entity
----@param itemEntity ItemEntity
+---@param itemEntity EntityHandle
 local function saveOriginalWeaponInfos(itemEntity)
     if itemEntity.Vars.Fallen_OriginalWeaponInfos then
         BasicDebug("Already saved Original w infos")
@@ -33,7 +33,7 @@ local function saveOriginalWeaponInfos(itemEntity)
     BasicDebug(dataToSave)
 end
 ---Restores weapon item to its original state using stored infos
----@param itemEntity ItemEntity?
+---@param itemEntity EntityHandle?
 function RestoreOriginalWeaponVisuals(itemEntity, cleanVars)
     if itemEntity and itemEntity.Vars.Fallen_OriginalWeaponInfos then
         local uuid = EntityToUuid(itemEntity)

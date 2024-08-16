@@ -21,7 +21,7 @@ function SaveArmorInfosToModVars(armor, character, equipmentSlot)
 end
 
 ---Save original armor visuals inside the armor using info from a table
----@param armorEntity ItemEntity?
+---@param armorEntity EntityHandle?
 ---@param infoTable table
 ---@param originalSlotInfos table
 function SaveOriginalArmorInfos(armorEntity, infoTable, originalSlotInfos)
@@ -40,7 +40,7 @@ function SaveOriginalArmorInfos(armorEntity, infoTable, originalSlotInfos)
 end
 
 ---Restore dyes
----@param armorEntity ItemEntity
+---@param armorEntity EntityHandle
 local function restoreOriginalDyesForArmor(armorEntity)
     if armorEntity.Vars.Fallen_TmogArmorOriginalDye then
         armorEntity.ItemDye.Color = armorEntity.Vars.Fallen_TmogArmorOriginalDye
@@ -50,7 +50,7 @@ local function restoreOriginalDyesForArmor(armorEntity)
 end
 
 ---Basically do a tmog with the original infos
----@param armorEntity ItemEntity?
+---@param armorEntity EntityHandle?
 function RestoreOriginalArmorVisuals(armorEntity)
     if armorEntity then
         local entityUUID = EntityToUuid(armorEntity)
@@ -64,8 +64,8 @@ function RestoreOriginalArmorVisuals(armorEntity)
 end
 
 ---Handle the dyes stuff.
----@param skinEntity ItemEntity?
----@param equippedPieceEntity ItemEntity?
+---@param skinEntity EntityHandle?
+---@param equippedPieceEntity EntityHandle?
 function HandleDyesForArmor(skinEntity, equippedPieceEntity)
     if equippedPieceEntity then
         if equippedPieceEntity.ItemDye then
@@ -188,7 +188,7 @@ function RestoreMoggedArmors()
 end
 
 ---Replicate ArmorSetsState to trigger a refresh of the armor visuals
----@param entity CharacterEntity?
+---@param entity EntityHandle?
 function RefreshCharacterArmorVisuals(entity)
     if entity then
         if not entity.ArmorSetState then
@@ -242,14 +242,14 @@ function IsArmorSlotInvisible(slot, character)
 end
 
 --- Copy visuals from armor source to target
----@param target GUIDSTRING|ItemEntity?
----@param source GUIDSTRING|ItemEntity?
+---@param target GUIDSTRING|EntityHandle?
+---@param source GUIDSTRING|EntityHandle?
 function CopyVisuals(target, source)
     if not target and not source then return end
     local targetEntity = type(target) == "string" and _GE(target) or target
     local sourceEntity = type(source) == "string" and _GE(source) or source
-    ---@cast targetEntity ItemEntity
-    ---@cast sourceEntity ItemEntity
+    ---@cast targetEntity EntityHandle
+    ---@cast sourceEntity EntityHandle
 
     if targetEntity and sourceEntity then
         -- local sourceVisuals = sourceEntity.ServerItem.Template.Equipment.Visuals
